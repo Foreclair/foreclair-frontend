@@ -1,4 +1,6 @@
 import 'package:blues/ui/views/authentication/login_view.dart';
+import 'package:blues/utils/colors/snsm_colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,9 +12,37 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeMode themeMode = ThemeMode.light;
+
     return MaterialApp(
       title: 'Blues Online',
-      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(0, 51, 97, 1.0))),
+      themeMode: themeMode,
+      theme: ThemeData(
+        colorScheme: snsmLightColorScheme,
+        useMaterial3: true,
+        textTheme: GoogleFonts.poppinsTextTheme(),
+        appBarTheme: AppBarTheme(
+          backgroundColor: SNSMColors.bleuMarin,
+          foregroundColor: SNSMColors.blanc,
+          elevation: 2,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: SNSMColors.rouge,
+            foregroundColor: SNSMColors.blanc,
+            elevation: 3,
+          ),
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: SNSMColors.orange,
+          foregroundColor: SNSMColors.blanc,
+        ),
+      ),
+      darkTheme: ThemeData(
+        colorScheme: snsmDarkColorScheme,
+        useMaterial3: true,
+        fontFamily: 'Roboto',
+      ),
       home: const LoginView(),
       debugShowCheckedModeBanner: false,
     );
