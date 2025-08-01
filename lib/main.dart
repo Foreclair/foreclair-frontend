@@ -1,7 +1,8 @@
 import 'package:blues/ui/views/authentication/login_view.dart';
-import 'package:blues/utils/colors/snsm_colors.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'assets/colors/snsm_colors.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,29 +21,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: snsmLightColorScheme,
         useMaterial3: true,
-        textTheme: GoogleFonts.poppinsTextTheme(),
-        appBarTheme: AppBarTheme(
-          backgroundColor: SNSMColors.bleuMarin,
-          foregroundColor: SNSMColors.blanc,
-          elevation: 2,
-        ),
+        textTheme: GoogleFonts.fredokaTextTheme(),
+        appBarTheme: AppBarTheme(backgroundColor: SNSMColors.bleuMarin, foregroundColor: SNSMColors.blanc, elevation: 2),
         elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: SNSMColors.rouge,
-            foregroundColor: SNSMColors.blanc,
-            elevation: 3,
-          ),
+          style: ElevatedButton.styleFrom(backgroundColor: SNSMColors.rouge, foregroundColor: SNSMColors.blanc, elevation: 3),
         ),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: SNSMColors.orange,
           foregroundColor: SNSMColors.blanc,
         ),
       ),
-      darkTheme: ThemeData(
-        colorScheme: snsmDarkColorScheme,
-        useMaterial3: true,
-        fontFamily: 'Roboto',
-      ),
+      darkTheme: ThemeData(colorScheme: snsmDarkColorScheme, useMaterial3: true, fontFamily: 'Roboto'),
       home: const LoginView(),
       debugShowCheckedModeBanner: false,
     );
