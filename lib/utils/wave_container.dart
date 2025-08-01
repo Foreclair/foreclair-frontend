@@ -34,7 +34,7 @@ class WaveContainer extends StatelessWidget {
   final Widget child;
   final double height;
 
-  const WaveContainer({Key? key, required this.child, this.height = 650}) : super(key: key);
+  const WaveContainer({super.key, required this.child, this.height = 650});
 
   @override
   Widget build(BuildContext context) {
