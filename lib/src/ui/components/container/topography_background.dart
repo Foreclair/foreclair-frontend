@@ -10,16 +10,12 @@ class TopographyBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(color: Theme.of(context).colorScheme.primary),
+        Container(color: Theme.of(context).colorScheme.surfaceContainerHighest),
         Positioned.fill(
           child: SvgPicture.asset(
             'assets/svg/topography.svg',
             fit: BoxFit.cover,
-            colorFilter: const ColorFilter.mode(
-              Color(0xF2A1A1A1),
-              BlendMode.srcIn,
-
-            ),
+            colorFilter: const ColorFilter.mode(Color(0xF2A1A1A1), BlendMode.srcIn),
           ),
         ),
         // Optional foreground content

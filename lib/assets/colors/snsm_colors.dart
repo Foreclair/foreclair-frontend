@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 class SNSMColors {
   // Couleurs principales SNSM
-  static const Color bleuMarin = Color(0xFF003061);      // Bleu marine principal
-  static const Color bleuOcean = Color(0xFF1E5A96);      // Bleu océan
-  static const Color bleuClair = Color(0xFF4A90C2);      // Bleu clair
-  static const Color rouge = Color(0xFFE31E24);          // Rouge sauvetage
-  static const Color orange = Color(0xFFFF6B35);         // Orange sécurité
-  static const Color jaune = Color(0xFFFFD700);          // Jaune gilet
-  static const Color blanc = Color(0xFFFFFFFF);          // Blanc
-  static const Color gris = Color(0xFF6B7280);           // Gris neutre
-  static const Color grisClair = Color(0xFFF3F4F6);      // Gris très clair
+  static const Color bleuMarin = Color(0xFF003061); // Bleu marine principal
+  static const Color bleuOcean = Color(0xFF1E5A96); // Bleu océan
+  static const Color bleuClair = Color(0xFF4A90C2); // Bleu clair
+  static const Color rouge = Color(0xFFE31E24); // Rouge sauvetage
+  static const Color orange = Color(0xFFFF6B35); // Orange sécurité
+  static const Color jaune = Color(0xFFFFD700); // Jaune gilet
+  static const Color blanc = Color(0xFFFFFFFF); // Blanc
+  static const Color gris = Color(0xFF6B7280); // Gris neutre
+  static const Color grisClair = Color(0xFFF3F4F6); // Gris très clair
 }
 
 // ColorScheme Light Mode
@@ -20,7 +20,7 @@ const ColorScheme snsmLightColorScheme = ColorScheme(
   // Couleurs principales
   primary: SNSMColors.bleuMarin,
   onPrimary: SNSMColors.blanc,
-  primaryContainer: SNSMColors.bleuClair,
+  primaryContainer: SNSMColors.bleuOcean,
   onPrimaryContainer: SNSMColors.blanc,
 
   // Couleurs secondaires
@@ -42,9 +42,9 @@ const ColorScheme snsmLightColorScheme = ColorScheme(
   onErrorContainer: SNSMColors.rouge,
 
   // Couleurs de surface
-  surface: SNSMColors.blanc,
+  surface: SNSMColors.grisClair,
   onSurface: SNSMColors.bleuMarin,
-  surfaceContainerHighest: SNSMColors.grisClair,
+  surfaceContainerHighest: SNSMColors.bleuMarin,
   onSurfaceVariant: SNSMColors.gris,
 
   // Couleurs d'outline
@@ -66,10 +66,10 @@ const ColorScheme snsmDarkColorScheme = ColorScheme(
   brightness: Brightness.dark,
 
   // Couleurs principales
-  primary: SNSMColors.bleuOcean,
+  primary: SNSMColors.grisClair,
   onPrimary: SNSMColors.bleuMarin,
-  primaryContainer: SNSMColors.bleuMarin,
-  onPrimaryContainer: SNSMColors.bleuClair,
+  primaryContainer: SNSMColors.bleuOcean,
+  onPrimaryContainer: SNSMColors.blanc,
 
   // Couleurs secondaires
   secondary: SNSMColors.orange,

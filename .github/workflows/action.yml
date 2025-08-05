@@ -7,9 +7,21 @@ on:
     branches: [ main ]
 
 jobs:
+  gitleaks:
+    name: GitLeaks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run GitLeaks
+        uses: gitleaks/gitleaks-action@v2
+
+
   build:
     name: Build and Test Blues App
     runs-on: macos-latest
+    needs: gitleaks
 
     steps:
       - name: Checkout repository

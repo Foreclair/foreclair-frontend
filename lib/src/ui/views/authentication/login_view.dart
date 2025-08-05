@@ -1,10 +1,14 @@
 import 'package:blues/assets/colors/snsm_colors.dart';
 import 'package:blues/assets/fonts/text_utils.dart';
-import 'package:blues/ui/components/buttons/primary_action_button_widget.dart';
-import 'package:blues/ui/components/inputs/login_form_field_widget.dart';
-import 'package:blues/utils/topography_background.dart';
+import 'package:blues/src/data/models/authentication/auth_result_model.dart';
+import 'package:blues/src/data/services/authentication/auth_service.dart';
+import 'package:blues/src/ui/components/buttons/primary_action_button_widget.dart';
+import 'package:blues/src/ui/components/container/topography_background.dart';
+import 'package:blues/src/ui/components/container/wave_container.dart';
+import 'package:blues/src/ui/components/extensions/snack_bar_extension.dart';
+import 'package:blues/src/ui/components/inputs/login_form_field_widget.dart';
+import 'package:blues/src/ui/views/layout/layout_views.dart';
 import 'package:blues/utils/units/size_utils.dart';
-import 'package:blues/utils/wave_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +24,43 @@ class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final String _errorMessage = '';
+  final AuthService _authService = AuthService();
+
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      final result = await _authService.login(_emailController.text.trim(), _passwordController.text);
+
+      if (!mounted) return;
+
+      if (result.isSuccess) {
+        context.showSuccessSnackBar('Connexion réussie !');
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LayoutViews()));
+      } else {
+        context.showErrorSnackBar(result.errorMessage!, heightPosition: 20);
+
+        if (result.errorType == AuthErrorType.invalidCredentials) {
+          _passwordController.clear();
+        }
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +68,7 @@ class _LoginViewState extends State<LoginView> {
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: TopographyBackground(
         child: WaveContainer(
-          height: context.height(55),
+          height: context.height(52.5),
           child: Padding(
             padding: EdgeInsetsGeometry.only(
               top: context.height(10),
@@ -41,15 +81,15 @@ class _LoginViewState extends State<LoginView> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Se connecter", style: titleLarge),
+                Text("Se connecter", style: titleLarge.copyWith(color: Theme.of(context).colorScheme.primary)),
                 Divider(
-                  color: SNSMColors.bleuMarin,
+                  color: Theme.of(context).colorScheme.primary,
                   height: context.height(2),
                   thickness: 4,
                   endIndent: context.width(50),
                   radius: BorderRadius.circular(10),
                 ),
-                Spacer(),
+                const Spacer(),
                 AutofillGroup(
                   child: Form(
                     key: _formKey,
@@ -59,8 +99,12 @@ class _LoginViewState extends State<LoginView> {
                           key: const Key('emailField'),
                           controller: _emailController,
                           hint: "Identifiant",
+                          color: Theme.of(context).colorScheme.primary,
                           icon: CupertinoIcons.profile_circled,
-                          validator: (p0) {
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Veuillez saisir votre identifiant';
+                            }
                             return null;
                           },
                           autofillHints: const [AutofillHints.username],
@@ -69,58 +113,37 @@ class _LoginViewState extends State<LoginView> {
                         LoginFormField(
                           key: const Key('passwordField'),
                           controller: _passwordController,
+                          color: Theme.of(context).colorScheme.primary,
                           hint: "Mot de passe",
                           password: true,
                           icon: CupertinoIcons.lock,
-                          validator: (p0) {
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Veuillez saisir votre mot de passe';
+                            }
                             return null;
                           },
                           autofillHints: const [AutofillHints.password],
                         ),
-                        if (_errorMessage.isNotEmpty) ...[
-                          const SizedBox(height: 20),
-                          Text(_errorMessage, style: const TextStyle(color: Colors.deepOrangeAccent)),
-                        ],
                       ],
                     ),
                   ),
                 ),
-
-                // A voir si Mot de passe oublié est nécessaire
-
-                // RichText(
-                //   key: const Key('forgotPasswordText'),
-                //   text: TextSpan(
-                //     text: "J'ai oublié mon mot de passe",
-                //     style: label.copyWith(decoration: TextDecoration.underline, color: SNSMColors.orange),
-                //     recognizer: TapGestureRecognizer()
-                //       ..onTap = () {
-                //         showDialog(
-                //           context: context,
-                //           builder: (context) {
-                //             print("Forgot password tapped");
-                //             return Text("Mot de passe oublié dialog");
-                //           },
-                //         );
-                //       },
-                //   ),
-                // ),
-                Spacer(),
-                PrimaryActionButtonWidget(key: const Key('validateLoginButton'), text: 'Valider'),
+                const Spacer(),
+                PrimaryActionButtonWidget(
+                  key: const Key('validateLoginButton'),
+                  text: _isLoading ? 'Connexion...' : 'Valider',
+                  onPressed: _isLoading ? null : _handleLogin,
+                ),
                 Center(
                   child: RichText(
                     key: const Key('identifyLaterText'),
                     text: TextSpan(
                       text: "M'identifier plus tard",
-                      style: label.copyWith(decoration: TextDecoration.underline, color: SNSMColors.bleuClair),
+                      style: label.copyWith(decoration: TextDecoration.underline, color: SNSMColors.gris),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(child: Text("Connexion guest"));
-                            },
-                          );
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LayoutViews()));
                         },
                     ),
                   ),

@@ -1,4 +1,4 @@
-import 'package:blues/ui/views/authentication/login_view.dart';
+import 'package:blues/src/ui/views/authentication/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
