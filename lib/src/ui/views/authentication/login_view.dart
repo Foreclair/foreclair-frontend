@@ -69,40 +69,63 @@ class _LoginViewState extends State<LoginView> {
       body: TopographyBackground(
         child: WaveContainer(
           height: context.height(55),
-          child: SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: context.height(55) - context.height(13)),
-              child: IntrinsicHeight(
-                child: Padding(
-                  padding: EdgeInsetsGeometry.only(
-                    top: context.height(10),
-                    left: context.width(10),
-                    right: context.width(10),
-                    bottom: context.height(3),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Se connecter", style: titleLarge.copyWith(color: Theme.of(context).colorScheme.primary)),
-                      Divider(
-                        color: Theme.of(context).colorScheme.primary,
-                        height: context.height(2),
-                        thickness: 4,
-                        endIndent: context.width(50),
-                        radius: BorderRadius.circular(10),
-                      ),
-                      const Spacer(),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final availableHeight = constraints.maxHeight;
+              final padding = EdgeInsetsGeometry.only(
+                top: context.height(10),
+                left: context.width(10),
+                right: context.width(10),
+                bottom: context.height(3),
+              );
+              final contentHeight = availableHeight - context.height(13);
 
-                      // Formulaire de connexion
-                      Flexible(
-                        child: AutofillGroup(
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                LoginFormField(
+              final titleSpacing = (contentHeight * 0.02).clamp(2.0, 8.0);
+              final formSpacing = (contentHeight * 0.02).clamp(2.0, 8.0);
+              final buttonSpacing = (contentHeight * 0.02).clamp(2.0, 8.0);
+
+              return Padding(
+                padding: padding,
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              "Se connecter",
+                              style: titleLarge.copyWith(color: Theme.of(context).colorScheme.primary),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          SizedBox(height: titleSpacing),
+                          Flexible(
+                            child: Divider(
+                              color: Theme.of(context).colorScheme.primary,
+                              thickness: 4,
+                              endIndent: context.width(50),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    /**
+                     * FORM SECTION
+                     */
+                    Expanded(
+                      flex: 4,
+                      child: AutofillGroup(
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                child: LoginFormField(
                                   key: const Key('emailField'),
                                   controller: _emailController,
                                   hint: "Identifiant",
@@ -116,8 +139,10 @@ class _LoginViewState extends State<LoginView> {
                                   },
                                   autofillHints: const [AutofillHints.username],
                                 ),
-                                SizedBox(height: context.height(1)),
-                                LoginFormField(
+                              ),
+                              SizedBox(height: formSpacing),
+                              Flexible(
+                                child: LoginFormField(
                                   key: const Key('passwordField'),
                                   controller: _passwordController,
                                   color: Theme.of(context).colorScheme.primary,
@@ -132,25 +157,30 @@ class _LoginViewState extends State<LoginView> {
                                   },
                                   autofillHints: const [AutofillHints.password],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
+                    ),
 
-                      const Spacer(),
-
-                      // Boutons en bas
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
+                    /**
+                     * BUTTON SECTION
+                     */
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          PrimaryActionButtonWidget(
-                            key: const Key('validateLoginButton'),
-                            text: _isLoading ? 'Connexion...' : 'Valider',
-                            onPressed: _isLoading ? null : _handleLogin,
+                          Flexible(
+                            child: PrimaryActionButtonWidget(
+                              key: const Key('validateLoginButton'),
+                              text: _isLoading ? 'Connexion...' : 'Valider',
+                              onPressed: _isLoading ? null : _handleLogin,
+                            ),
                           ),
-                          SizedBox(height: context.height(1)),
-                          Center(
+                          SizedBox(height: buttonSpacing),
+                          Flexible(
                             child: RichText(
                               key: const Key('identifyLaterText'),
                               text: TextSpan(
@@ -161,15 +191,16 @@ class _LoginViewState extends State<LoginView> {
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LayoutViews()));
                                   },
                               ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ),
-            ),
+              );
+            },
           ),
         ),
       ),
