@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 extension SnackBarExtension on BuildContext {
-  void showErrorSnackBar(String message, {double heightPosition = 16}) {
+  void showErrorSnackBar(String message, {double heightPosition = 20}) {
     ScaffoldMessenger.of(this).hideCurrentSnackBar();
     ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(

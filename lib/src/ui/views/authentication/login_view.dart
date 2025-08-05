@@ -49,7 +49,7 @@ class _LoginViewState extends State<LoginView> {
         context.showSuccessSnackBar('Connexion réussie !');
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LayoutViews()));
       } else {
-        context.showErrorSnackBar(result.errorMessage!, heightPosition: 20);
+        context.showErrorSnackBar(result.errorMessage!);
 
         if (result.errorType == AuthErrorType.invalidCredentials) {
           _passwordController.clear();
@@ -68,87 +68,107 @@ class _LoginViewState extends State<LoginView> {
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: TopographyBackground(
         child: WaveContainer(
-          height: context.height(52.5),
-          child: Padding(
-            padding: EdgeInsetsGeometry.only(
-              top: context.height(10),
-              left: context.width(10),
-              right: context.width(10),
-              bottom: context.height(3),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Se connecter", style: titleLarge.copyWith(color: Theme.of(context).colorScheme.primary)),
-                Divider(
-                  color: Theme.of(context).colorScheme.primary,
-                  height: context.height(2),
-                  thickness: 4,
-                  endIndent: context.width(50),
-                  radius: BorderRadius.circular(10),
-                ),
-                const Spacer(),
-                AutofillGroup(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        LoginFormField(
-                          key: const Key('emailField'),
-                          controller: _emailController,
-                          hint: "Identifiant",
-                          color: Theme.of(context).colorScheme.primary,
-                          icon: CupertinoIcons.profile_circled,
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Veuillez saisir votre identifiant';
-                            }
-                            return null;
-                          },
-                          autofillHints: const [AutofillHints.username],
+          height: context.height(55),
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: context.height(55) - context.height(13)),
+              child: IntrinsicHeight(
+                child: Padding(
+                  padding: EdgeInsetsGeometry.only(
+                    top: context.height(10),
+                    left: context.width(10),
+                    right: context.width(10),
+                    bottom: context.height(3),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Se connecter", style: titleLarge.copyWith(color: Theme.of(context).colorScheme.primary)),
+                      Divider(
+                        color: Theme.of(context).colorScheme.primary,
+                        height: context.height(2),
+                        thickness: 4,
+                        endIndent: context.width(50),
+                        radius: BorderRadius.circular(10),
+                      ),
+                      const Spacer(),
+
+                      // Formulaire de connexion
+                      Flexible(
+                        child: AutofillGroup(
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                LoginFormField(
+                                  key: const Key('emailField'),
+                                  controller: _emailController,
+                                  hint: "Identifiant",
+                                  color: Theme.of(context).colorScheme.primary,
+                                  icon: CupertinoIcons.profile_circled,
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Veuillez saisir votre identifiant';
+                                    }
+                                    return null;
+                                  },
+                                  autofillHints: const [AutofillHints.username],
+                                ),
+                                SizedBox(height: context.height(1)),
+                                LoginFormField(
+                                  key: const Key('passwordField'),
+                                  controller: _passwordController,
+                                  color: Theme.of(context).colorScheme.primary,
+                                  hint: "Mot de passe",
+                                  password: true,
+                                  icon: CupertinoIcons.lock,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Veuillez saisir votre mot de passe';
+                                    }
+                                    return null;
+                                  },
+                                  autofillHints: const [AutofillHints.password],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        SizedBox(height: context.height(1)),
-                        LoginFormField(
-                          key: const Key('passwordField'),
-                          controller: _passwordController,
-                          color: Theme.of(context).colorScheme.primary,
-                          hint: "Mot de passe",
-                          password: true,
-                          icon: CupertinoIcons.lock,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Veuillez saisir votre mot de passe';
-                            }
-                            return null;
-                          },
-                          autofillHints: const [AutofillHints.password],
-                        ),
-                      ],
-                    ),
+                      ),
+
+                      const Spacer(),
+
+                      // Boutons en bas
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          PrimaryActionButtonWidget(
+                            key: const Key('validateLoginButton'),
+                            text: _isLoading ? 'Connexion...' : 'Valider',
+                            onPressed: _isLoading ? null : _handleLogin,
+                          ),
+                          SizedBox(height: context.height(1)),
+                          Center(
+                            child: RichText(
+                              key: const Key('identifyLaterText'),
+                              text: TextSpan(
+                                text: "M'identifier plus tard",
+                                style: label.copyWith(decoration: TextDecoration.underline, color: SNSMColors.gris),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LayoutViews()));
+                                  },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                const Spacer(),
-                PrimaryActionButtonWidget(
-                  key: const Key('validateLoginButton'),
-                  text: _isLoading ? 'Connexion...' : 'Valider',
-                  onPressed: _isLoading ? null : _handleLogin,
-                ),
-                Center(
-                  child: RichText(
-                    key: const Key('identifyLaterText'),
-                    text: TextSpan(
-                      text: "M'identifier plus tard",
-                      style: label.copyWith(decoration: TextDecoration.underline, color: SNSMColors.gris),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LayoutViews()));
-                        },
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
