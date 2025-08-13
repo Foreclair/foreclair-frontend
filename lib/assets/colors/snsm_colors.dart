@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 
 class SNSMColors {
-  // Couleurs principales SNSM
-  static const Color bleuMarin = Color(0xFF003061); // Bleu marine principal
-  static const Color bleuOcean = Color(0xFF1E5A96); // Bleu océan
-  static const Color bleuClair = Color(0xFF4A90C2); // Bleu clair
-  static const Color rouge = Color(0xFFE31E24); // Rouge sauvetage
-  static const Color orange = Color(0xFFFF6B35); // Orange sécurité
-  static const Color jaune = Color(0xFFFFD700); // Jaune gilet
-  static const Color blanc = Color(0xFFFFFFFF); // Blanc
-  static const Color gris = Color(0xFF6B7280); // Gris neutre
-  static const Color grisClair = Color(0xFFF3F4F6); // Gris très clair
+  static const Color bleuMarin = Color(0xFF003061);
+  static const Color bleuOcean = Color(0xFF1E5A96);
+  static const Color bleuClair = Color(0xFF4A90C2);
+  static const Color rouge = Color(0xFFE31E24);
+  static const Color orange = Color(0xFFFF6B35);
+  static const Color jaune = Color(0xFFFFD700);
+  static const Color blanc = Color(0xFFFFFFFF);
+  static const Color gris = Color(0xFF6B7280);
+  static const Color grisClair = Color(0xFFD7D9D9);
 }
 
-// ColorScheme Light Mode
+/// ===================================================================
+/// ☀️ LIGHT MODE
+/// ===================================================================
 const ColorScheme snsmLightColorScheme = ColorScheme(
   brightness: Brightness.light,
 
@@ -61,7 +62,9 @@ const ColorScheme snsmLightColorScheme = ColorScheme(
   scrim: Colors.black54,
 );
 
-// ColorScheme Dark Mode
+/// ===================================================================
+///  🌙️ DARK MODE
+/// ===================================================================
 const ColorScheme snsmDarkColorScheme = ColorScheme(
   brightness: Brightness.dark,
 
@@ -96,7 +99,7 @@ const ColorScheme snsmDarkColorScheme = ColorScheme(
   onSurfaceVariant: SNSMColors.gris,
 
   // Couleurs d'outline
-  outline: SNSMColors.gris,
+  outline: SNSMColors.blanc,
   outlineVariant: Color(0xFF374151),
 
   // Couleurs inversées

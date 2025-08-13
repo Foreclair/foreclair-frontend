@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:blues/src/client/api_client.dart';
-import 'package:blues/src/data/models/authentication/auth_result_model.dart';
-import 'package:blues/utils/logs/logger_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import '../../../../utils/logs/logger_utils.dart';
+import '../../../client/api_client.dart';
+import '../../models/authentication/auth_result_model.dart';
 
 class AuthService {
   final Dio _dio = ApiClient.instance;
@@ -16,10 +17,7 @@ class AuthService {
 
       final response = await _dio.post(
         '/auth',
-        options: Options(
-          headers: {'Authorization': basicAuth},
-          validateStatus: (status) => status! < 500, // Ne pas throw pour 4xx
-        ),
+        options: Options(headers: {'Authorization': basicAuth}, validateStatus: (status) => status! < 500),
       );
 
       if (response.statusCode == 200) {

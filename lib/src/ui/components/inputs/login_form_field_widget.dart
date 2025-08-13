@@ -1,7 +1,8 @@
-import 'package:blues/assets/colors/snsm_colors.dart';
-import 'package:blues/assets/fonts/text_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../assets/colors/snsm_colors.dart';
+import '../../../../assets/fonts/text_utils.dart';
 
 class LoginFormField extends StatelessWidget {
   final String? label;

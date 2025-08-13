@@ -1,17 +1,18 @@
-import 'package:blues/assets/colors/snsm_colors.dart';
-import 'package:blues/assets/fonts/text_utils.dart';
-import 'package:blues/src/data/models/authentication/auth_result_model.dart';
-import 'package:blues/src/data/services/authentication/auth_service.dart';
-import 'package:blues/src/ui/components/buttons/primary_action_button_widget.dart';
-import 'package:blues/src/ui/components/container/topography_background.dart';
-import 'package:blues/src/ui/components/container/wave_container.dart';
-import 'package:blues/src/ui/components/extensions/snack_bar_extension.dart';
-import 'package:blues/src/ui/components/inputs/login_form_field_widget.dart';
-import 'package:blues/src/ui/views/layout/layout_views.dart';
-import 'package:blues/utils/units/size_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:foreclair/src/ui/components/extensions/snack_bar_extension.dart';
+import 'package:foreclair/utils/units/size_utils.dart';
+
+import '../../../../assets/colors/snsm_colors.dart';
+import '../../../../assets/fonts/text_utils.dart';
+import '../../../data/models/authentication/auth_result_model.dart';
+import '../../../data/services/authentication/auth_service.dart';
+import '../../components/buttons/primary_action_button_widget.dart';
+import '../../components/container/topography_background.dart';
+import '../../components/container/wave_container.dart';
+import '../../components/inputs/login_form_field_widget.dart';
+import '../layout/layout_views.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -67,6 +68,7 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: TopographyBackground(
+        backgroundColors: [Theme.of(context).colorScheme.surfaceContainerHighest],
         child: WaveContainer(
           height: context.height(55),
           child: LayoutBuilder(

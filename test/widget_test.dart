@@ -5,8 +5,8 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:blues/main.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:foreclair/main.dart';
 
 void main() {
   testWidgets('Test App', (WidgetTester tester) async {

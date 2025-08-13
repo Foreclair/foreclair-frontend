@@ -1,10 +1,16 @@
-import 'package:blues/src/ui/views/authentication/login_view.dart';
 import 'package:flutter/material.dart';
+import 'package:foreclair/src/ui/views/layout/users/layout_user_view.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 import 'assets/colors/snsm_colors.dart';
 
 void main() {
+  Intl.defaultLocale = 'fr_FR';
+  initializeDateFormatting('fr_FR', null);
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MyApp());
 }
 
@@ -16,8 +22,9 @@ class MyApp extends StatelessWidget {
     ThemeMode themeMode = ThemeMode.light;
 
     return MaterialApp(
-      title: 'Blues Online',
+      title: 'Foréclair',
       themeMode: themeMode,
+      locale: Locale('fr', 'FR'),
       theme: ThemeData(
         colorScheme: snsmLightColorScheme,
         useMaterial3: true,
@@ -32,7 +39,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       darkTheme: ThemeData(colorScheme: snsmDarkColorScheme, useMaterial3: true, fontFamily: 'Roboto'),
-      home: const LoginView(),
+      home: const LayoutUserView(),
       debugShowCheckedModeBanner: false,
     );
   }
