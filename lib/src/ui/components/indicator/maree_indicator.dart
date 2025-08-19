@@ -168,8 +168,8 @@ class _TideCurvePainter extends CustomPainter {
       Offset(nowX, nowY),
       5.2,
       Paint()
-        ..color = Colors.white
-        ..style = PaintingStyle.stroke
+        ..color = curveColor
+        ..style = PaintingStyle.fill
         ..strokeWidth = 2,
     );
 

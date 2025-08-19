@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:foreclair/src/ui/components/extensions/snack_bar_extension.dart';
+import 'package:foreclair/src/ui/views/layout/users/layout_user_view.dart';
 import 'package:foreclair/utils/units/size_utils.dart';
 
 import '../../../../assets/colors/snsm_colors.dart';
@@ -12,7 +13,6 @@ import '../../components/buttons/primary_action_button_widget.dart';
 import '../../components/container/topography_background.dart';
 import '../../components/container/wave_container.dart';
 import '../../components/inputs/login_form_field_widget.dart';
-import '../layout/layout_views.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -48,7 +48,7 @@ class _LoginViewState extends State<LoginView> {
 
       if (result.isSuccess) {
         context.showSuccessSnackBar('Connexion réussie !');
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LayoutViews()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LayoutUserView()));
       } else {
         context.showErrorSnackBar(result.errorMessage!);
 
@@ -68,7 +68,10 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: TopographyBackground(
-        backgroundColors: [Theme.of(context).colorScheme.surfaceContainerHighest],
+        backgroundColors: [
+          Theme.of(context).colorScheme.surfaceContainerHighest,
+          Theme.of(context).colorScheme.surfaceContainerHighest,
+        ],
         child: WaveContainer(
           height: context.height(55),
           child: LayoutBuilder(
@@ -187,10 +190,13 @@ class _LoginViewState extends State<LoginView> {
                               key: const Key('identifyLaterText'),
                               text: TextSpan(
                                 text: "M'identifier plus tard",
+
                                 style: label.copyWith(decoration: TextDecoration.underline, color: SNSMColors.gris),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LayoutViews()));
+                                    Navigator.of(
+                                      context,
+                                    ).push(MaterialPageRoute(builder: (context) => const LayoutUserView()));
                                   },
                               ),
                               overflow: TextOverflow.ellipsis,

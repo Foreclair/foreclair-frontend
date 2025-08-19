@@ -1,20 +1,20 @@
+// lib/services/auth_service.dart
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../../utils/logs/logger_utils.dart';
 import '../../../client/api_client.dart';
 import '../../models/authentication/auth_result_model.dart';
+import '../routes/route_service.dart';
 
 class AuthService {
   final Dio _dio = ApiClient.instance;
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final RouteService _routeService = RouteService();
 
   Future<AuthResult> login(String email, String password) async {
     try {
-      String basicAuth = 'Basic ${base64Encode(utf8.encode('$email:$password'))}';
-
+      final basicAuth = 'Basic ${base64Encode(utf8.encode('$email:$password'))}';
       final response = await _dio.post(
         '/auth',
         options: Options(headers: {'Authorization': basicAuth}, validateStatus: (status) => status! < 500),
@@ -22,8 +22,8 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final token = response.data.toString();
-        await _storeToken(token);
-        logger.i('Login successful for user: $email', stackTrace: StackTrace.empty);
+        await _routeService.storeToken(token);
+        logger.i('Login successful for user: $email');
         return AuthResult.success(token);
       } else if (response.statusCode == 401) {
         logger.w('Invalid credentials for user: $email');
@@ -33,19 +33,18 @@ class AuthService {
         );
       } else {
         logger.e('Server error: ${response.statusCode}');
-        return AuthResult.failure('Erreur serveur. Veuillez réessayer plus tard.', AuthErrorType.serverError);
+        return AuthResult.failure(
+          'Erreur serveur (${response.statusCode}). Veuillez réessayer plus tard.',
+          AuthErrorType.serverError,
+        );
       }
     } on DioException catch (e) {
-      logger.e('Network error during login: ${e.message}');
+      logger.e('Network error during login', error: e, stackTrace: StackTrace.current);
       return AuthResult.failure(_getNetworkErrorMessage(e), AuthErrorType.networkError);
     } catch (e) {
-      logger.e('Unexpected error during login: $e');
+      logger.e('Unexpected error during login', error: e, stackTrace: StackTrace.current);
       return AuthResult.failure('Une erreur inattendue s\'est produite.', AuthErrorType.unknown);
     }
-  }
-
-  Future<void> _storeToken(String token) async {
-    await _storage.write(key: 'access_token', value: token);
   }
 
   String _getNetworkErrorMessage(DioException e) {
@@ -55,7 +54,7 @@ class AuthService {
       case DioExceptionType.receiveTimeout:
         return 'Délai d\'attente dépassé. Vérifiez votre connexion internet.';
       case DioExceptionType.connectionError:
-        return 'Impossible de se connecter au serveur. Vérifiez votre connexion internet.';
+        return 'Impossible de se connecter au serveur.';
       default:
         return 'Erreur de réseau. Veuillez réessayer.';
     }

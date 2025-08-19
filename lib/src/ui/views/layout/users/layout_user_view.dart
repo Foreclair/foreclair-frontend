@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:foreclair/src/ui/pages/logbook/main/logbook_page.dart';
+import 'package:foreclair/src/ui/views/authentication/login_view.dart';
 import 'package:foreclair/utils/units/size_utils.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../assets/fonts/text_utils.dart';
+import '../../../../../utils/logs/logger_utils.dart';
 import '../../../../../utils/text/text_utils.dart';
 import '../../../../data/models/meteo/tide/tide_model.dart';
+import '../../../../data/services/routes/route_service.dart';
+import '../../../components/cards/dashboard_card.dart';
 import '../../../components/indicator/maree_indicator.dart';
 
 class LayoutUserView extends StatefulWidget {
@@ -32,10 +37,10 @@ class _LayoutUserViewState extends State<LayoutUserView> {
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(context.width(5)),
+            padding: EdgeInsets.symmetric(vertical: context.height(5), horizontal: context.width(5)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -50,16 +55,23 @@ class _LayoutUserViewState extends State<LayoutUserView> {
                         Text("Poste de la mer", style: bodyLargeBold),
                       ],
                     ),
-                    IconButton(icon: const Icon(Icons.graphic_eq_rounded), onPressed: () {}),
+                    IconButton(
+                      icon: const Icon(Icons.graphic_eq_rounded),
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginView()));
+                      },
+                    ),
                   ],
                 ),
                 SizedBox(height: context.height(5)),
 
                 /// 📝 Main Courante
-                dashboardContainer(
+                DashboardCard(
                   context: context,
-                  height: context.height(12.5),
                   color: secondaryColor,
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LogBookPage()));
+                  },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -81,23 +93,66 @@ class _LayoutUserViewState extends State<LayoutUserView> {
                   spacing: context.width(5),
                   runSpacing: context.height(2),
                   children: [
-                    _buildDashboardButton(context, "Effectif", tertiaryColor),
-                    _buildDashboardButton(context, "Statistiques", tertiaryColor),
-                    _buildDashboardButton(context, "Historique", tertiaryColor),
-                    _buildDashboardButton(context, "Configuration", tertiaryColor),
+                    DashboardCard(
+                      context: context,
+                      width: context.width(42.5),
+                      color: tertiaryColor,
+                      onTap: () async {
+                        final RouteService routeService = RouteService();
+                        final response = await routeService.request(method: 'GET', path: '/hello');
+                        logger.d(response.data);
+                      },
+                      child: Text("Effectif", style: bodyMediumBold),
+                    ),
+                    DashboardCard(
+                      context: context,
+                      width: context.width(42.5),
+                      color: tertiaryColor,
+                      onTap: () {},
+                      child: Text("Statistiques", style: bodyMediumBold),
+                    ),
+                    DashboardCard(
+                      context: context,
+                      width: context.width(42.5),
+                      color: tertiaryColor,
+                      onTap: () {},
+                      child: Text("Historique", style: bodyMediumBold),
+                    ),
+                    DashboardCard(
+                      context: context,
+                      width: context.width(42.5),
+                      color: tertiaryColor,
+                      onTap: () {},
+                      child: Text("Configuration", style: bodyMediumBold),
+                    ),
                   ],
                 ),
 
                 SizedBox(height: context.height(2)),
 
                 /// ⛅ Meteo
-                dashboardContainer(
+                DashboardCard(
                   context: context,
-                  height: context.height(20),
                   color: theme.colorScheme.primaryContainer.withAlpha(20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text("Météo", style: bodyMediumBold),
+                  onTap: () {
+                    // Navigate to Meteo page
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text("Météo", style: bodyMediumBold),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _buildMeteoItem(Icons.thermostat, "26°C", "Air", context),
+                          _buildMeteoItem(Icons.water_drop, "22°C", "Eau", context),
+                          _buildMeteoItem(Icons.air, "15 km/h", "NE", context),
+                          _buildMeteoItem(Icons.wb_sunny, "7", "UV", context),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -114,7 +169,7 @@ class _LayoutUserViewState extends State<LayoutUserView> {
             ],
             currentTime: now,
             curveColor: theme.colorScheme.outline,
-            gradientStartColor: theme.colorScheme.onSurfaceVariant.withAlpha(70),
+            gradientStartColor: theme.colorScheme.onSurfaceVariant.withAlpha(30),
             gradientEndColor: theme.colorScheme.surface.withAlpha(10),
             height: context.height(25),
           ),
@@ -123,34 +178,14 @@ class _LayoutUserViewState extends State<LayoutUserView> {
     );
   }
 
-  Widget _buildDashboardButton(BuildContext context, String label, Color color) {
-    return dashboardContainer(
-      context: context,
-      height: context.height(8),
-      width: context.width(42.5),
-      color: color,
-      child: Center(child: Text(label, style: bodyMediumBold)),
+  Widget _buildMeteoItem(IconData icon, String value, String label, BuildContext context) {
+    return Column(
+      children: [
+        Icon(icon, size: 28, color: Theme.of(context).colorScheme.primary),
+        const SizedBox(height: 4),
+        Text(value, style: bodyMediumBold),
+        Text(label, style: bodySmall),
+      ],
     );
   }
-}
-
-Widget dashboardContainer({
-  required BuildContext context,
-  required Widget child,
-  required Color color,
-  required double height,
-  double width = double.infinity,
-}) {
-  return Container(
-    height: height,
-    width: width,
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-    decoration: BoxDecoration(
-      color: color,
-      borderRadius: BorderRadius.circular(15),
-      boxShadow: [BoxShadow(color: Colors.black.withAlpha(5), blurRadius: 10, offset: const Offset(0, 4))],
-      border: Border.all(color: color.withAlpha(50)),
-    ),
-    child: child,
-  );
 }
