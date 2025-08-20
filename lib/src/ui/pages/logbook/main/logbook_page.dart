@@ -294,7 +294,7 @@ class _LogBookPageState extends State<LogBookPage> {
               color: eventColor,
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 2),
-              boxShadow: [BoxShadow(color: eventColor.withOpacity(0.3), blurRadius: 4, offset: const Offset(0, 2))],
+              boxShadow: [BoxShadow(color: eventColor.withAlpha(75), blurRadius: 4, offset: const Offset(0, 2))],
             ),
           ),
           // Short duration line (only if event has an end time)
@@ -306,7 +306,7 @@ class _LogBookPageState extends State<LogBookPage> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [eventColor, eventColor.withOpacity(0.6)],
+                  colors: [eventColor, eventColor.withAlpha(140)],
                 ),
                 borderRadius: BorderRadius.circular(1.5),
               ),
@@ -330,11 +330,11 @@ class _LogBookPageState extends State<LogBookPage> {
         margin: const EdgeInsets.only(bottom: 4),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? eventColor.withOpacity(0.15) : eventColor.withOpacity(0.05),
+          color: isSelected ? eventColor.withAlpha(15) : eventColor.withAlpha(5),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: isSelected ? eventColor : eventColor.withOpacity(0.3), width: isSelected ? 2 : 1),
+          border: Border.all(color: isSelected ? eventColor : eventColor.withAlpha(30), width: isSelected ? 2 : 1),
           boxShadow: isSelected
-              ? [BoxShadow(color: eventColor.withOpacity(0.2), blurRadius: 6, offset: const Offset(0, 2))]
+              ? [BoxShadow(color: eventColor.withAlpha(20), blurRadius: 6, offset: const Offset(0, 2))]
               : null,
         ),
         child: Row(
@@ -353,10 +353,7 @@ class _LogBookPageState extends State<LogBookPage> {
               flex: 3,
               child: Text(
                 event.title,
-                style: bodySmallBold.copyWith(
-                  color: isSelected ? eventColor.withOpacity(0.9) : Colors.grey[800],
-                  fontSize: 13,
-                ),
+                style: bodySmallBold.copyWith(color: isSelected ? eventColor.withAlpha(200) : Colors.grey[800], fontSize: 13),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -365,7 +362,7 @@ class _LogBookPageState extends State<LogBookPage> {
             const SizedBox(width: 8),
 
             // Duration/Type icon
-            Icon(event.end != null ? Icons.schedule : Icons.flash_on, size: 16, color: eventColor.withOpacity(0.7)),
+            Icon(event.end != null ? Icons.schedule : Icons.flash_on, size: 16, color: eventColor.withAlpha(170)),
           ],
         ),
       ),
@@ -392,7 +389,7 @@ class _LogBookPageState extends State<LogBookPage> {
               Expanded(
                 child: Text(
                   event.title,
-                  style: titleMedium.copyWith(fontWeight: FontWeight.bold, color: eventColor.withOpacity(0.9)),
+                  style: titleMedium.copyWith(fontWeight: FontWeight.bold, color: eventColor.withAlpha(220)),
                 ),
               ),
             ],
@@ -404,9 +401,9 @@ class _LogBookPageState extends State<LogBookPage> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: eventColor.withOpacity(0.08),
+              color: eventColor.withAlpha(30),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: eventColor.withOpacity(0.2), width: 1),
+              border: Border.all(color: eventColor.withAlpha(50), width: 1),
             ),
             child: Row(
               children: [
@@ -414,7 +411,7 @@ class _LogBookPageState extends State<LogBookPage> {
                 const SizedBox(width: 8),
                 Text(
                   _formatEventTime(event),
-                  style: bodyMedium.copyWith(fontWeight: FontWeight.w500, color: eventColor.withOpacity(0.9)),
+                  style: bodyMedium.copyWith(fontWeight: FontWeight.w500, color: eventColor.withAlpha(230)),
                 ),
               ],
             ),
@@ -441,7 +438,7 @@ class _LogBookPageState extends State<LogBookPage> {
             const SizedBox(height: 8),
             Text(
               _calculateDuration(event),
-              style: bodyMedium.copyWith(color: eventColor.withOpacity(0.8), fontWeight: FontWeight.w500),
+              style: bodyMedium.copyWith(color: eventColor.withAlpha(180), fontWeight: FontWeight.w500),
             ),
           ],
         ],

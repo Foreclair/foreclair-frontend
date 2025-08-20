@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../colors/snsm_colors.dart';
 
-const TextStyle titleLarge = TextStyle(fontSize: 32, fontWeight: FontWeight.bold);
-const TextStyle titleLargeNeutral = TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: SNSMColors.blanc);
+final TextStyle titleLarge = TextStyle(
+  fontSize: 32,
+  fontWeight: FontWeight.bold,
+  fontFamily: GoogleFonts.poppins().fontFamily,
+);
+final TextStyle titleLargeNeutral = TextStyle(
+  fontSize: 32,
+  fontWeight: FontWeight.bold,
+  color: SNSMColors.blanc,
+  fontFamily: GoogleFonts.poppins().fontFamily,
+);
 
 const TextStyle titleMedium = TextStyle(fontSize: 22, fontWeight: FontWeight.bold);
 const TextStyle titleMediumNeutral = TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: SNSMColors.blanc);

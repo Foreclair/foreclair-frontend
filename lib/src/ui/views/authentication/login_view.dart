@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:foreclair/src/ui/components/extensions/snack_bar_extension.dart';
-import 'package:foreclair/src/ui/views/layout/users/layout_user_view.dart';
+import 'package:foreclair/src/ui/views/layout/layout_view.dart';
 import 'package:foreclair/utils/units/size_utils.dart';
 
 import '../../../../assets/colors/snsm_colors.dart';
@@ -10,9 +10,9 @@ import '../../../../assets/fonts/text_utils.dart';
 import '../../../data/models/authentication/auth_result_model.dart';
 import '../../../data/services/authentication/auth_service.dart';
 import '../../components/buttons/primary_action_button_widget.dart';
-import '../../components/container/topography_background.dart';
-import '../../components/container/wave_container.dart';
 import '../../components/inputs/login_form_field_widget.dart';
+import '../../components/layouts/topography_background.dart';
+import '../../components/layouts/wave_container.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -48,7 +48,7 @@ class _LoginViewState extends State<LoginView> {
 
       if (result.isSuccess) {
         context.showSuccessSnackBar('Connexion réussie !');
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LayoutUserView()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LayoutView()));
       } else {
         context.showErrorSnackBar(result.errorMessage!);
 
@@ -86,7 +86,6 @@ class _LoginViewState extends State<LoginView> {
               final contentHeight = availableHeight - context.height(13);
 
               final titleSpacing = (contentHeight * 0.02).clamp(2.0, 8.0);
-              final formSpacing = (contentHeight * 0.02).clamp(2.0, 8.0);
               final buttonSpacing = (contentHeight * 0.02).clamp(2.0, 8.0);
 
               return Padding(
@@ -145,7 +144,7 @@ class _LoginViewState extends State<LoginView> {
                                   autofillHints: const [AutofillHints.username],
                                 ),
                               ),
-                              SizedBox(height: formSpacing),
+                              SizedBox(height: context.height(1)),
                               Flexible(
                                 child: LoginFormField(
                                   key: const Key('passwordField'),
@@ -196,7 +195,7 @@ class _LoginViewState extends State<LoginView> {
                                   ..onTap = () {
                                     Navigator.of(
                                       context,
-                                    ).push(MaterialPageRoute(builder: (context) => const LayoutUserView()));
+                                    ).pushReplacement(MaterialPageRoute(builder: (context) => const LayoutView()));
                                   },
                               ),
                               overflow: TextOverflow.ellipsis,

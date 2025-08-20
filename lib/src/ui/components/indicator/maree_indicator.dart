@@ -11,6 +11,7 @@ class TideCurve extends StatelessWidget {
   final Color gradientStartColor;
   final Color gradientEndColor;
   final double height;
+  final bool isLabelsVisible;
 
   const TideCurve({
     super.key,
@@ -20,6 +21,7 @@ class TideCurve extends StatelessWidget {
     required this.gradientStartColor,
     required this.gradientEndColor,
     this.height = 220,
+    this.isLabelsVisible = false,
   });
 
   @override
@@ -34,6 +36,7 @@ class TideCurve extends StatelessWidget {
           curveColor: curveColor,
           gradientStartColor: gradientStartColor,
           gradientEndColor: gradientEndColor,
+          isLabelsVisible: isLabelsVisible,
         ),
       ),
     );
@@ -46,6 +49,7 @@ class _TideCurvePainter extends CustomPainter {
   final Color curveColor;
   final Color gradientStartColor;
   final Color gradientEndColor;
+  final bool isLabelsVisible;
 
   _TideCurvePainter({
     required this.tides,
@@ -53,6 +57,7 @@ class _TideCurvePainter extends CustomPainter {
     required this.curveColor,
     required this.gradientStartColor,
     required this.gradientEndColor,
+    required this.isLabelsVisible,
   });
 
   static const int totalMinutes = 24 * 60;
@@ -71,15 +76,12 @@ class _TideCurvePainter extends CustomPainter {
 
     // Gradient: start high, end low, but extend bottom area for slow fade
     final gradientPaint = Paint()
-      ..shader =
-          LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [gradientStartColor, gradientEndColor],
-            stops: [0.0, 1.0], // Full height
-          ).createShader(
-            Rect.fromLTWH(0, size.height * 0.4, size.width, size.height * 0.6), // lower transition
-          )
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [gradientStartColor, gradientEndColor],
+        stops: [0.0, 1.0], // Full height
+      ).createShader(Rect.fromLTWH(0, size.height * 0.4, size.width, size.height * 0.6))
       ..style = PaintingStyle.fill;
 
     // Prepare tide points
@@ -183,20 +185,23 @@ class _TideCurvePainter extends CustomPainter {
       final coeffStr = t.coefficient.toStringAsFixed(0);
 
       // Time label
-      textPainter.text = TextSpan(
-        text: timeStr,
-        style: TextStyle(color: curveColor, fontSize: 11, fontWeight: FontWeight.w500),
-      );
-      textPainter.layout();
-      textPainter.paint(canvas, Offset(x - textPainter.width / 2, y - 30));
+      if (isLabelsVisible) {
+        textPainter.text = TextSpan(
+          text: timeStr,
+          style: TextStyle(color: curveColor, fontSize: 11, fontWeight: FontWeight.w500),
+        );
 
-      // Coefficient label (just under the time)
-      textPainter.text = TextSpan(
-        text: coeffStr,
-        style: TextStyle(color: curveColor, fontSize: 10),
-      );
-      textPainter.layout();
-      textPainter.paint(canvas, Offset(x - textPainter.width / 2, y - 17));
+        textPainter.layout();
+        textPainter.paint(canvas, Offset(x - textPainter.width / 2, y - 30));
+
+        // Coefficient label (just under the time)
+        textPainter.text = TextSpan(
+          text: coeffStr,
+          style: TextStyle(color: curveColor, fontSize: 10),
+        );
+        textPainter.layout();
+        textPainter.paint(canvas, Offset(x - textPainter.width / 2, y - 17));
+      }
     }
   }
 

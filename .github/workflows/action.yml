@@ -64,3 +64,68 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/web
           publish_branch: gh-pages
+
+      - name: Notify Discord Success
+        if: success()
+        env:
+          PAGES_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+        run: |
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          PAYLOAD=$(jq -n \
+            --arg color "1469988" \
+            --arg url "$PAGES_URL" \
+            --arg desc "Commit: $COMMIT_MESSAGE\nMise à jour du GitHub Page" \
+            --arg title "**Frontend update réussie**" \
+            --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg footer_icon "https://www.snsm.org/themes/custom/customer/images/logo.png" \
+            '{
+              "embeds": [
+                {
+                  "title": $title,
+                  "url": $url,
+                  "description": $desc,
+                  "color": ($color|tonumber),
+                  "timestamp": $timestamp,
+                  "footer": {
+                    "icon_url": $footer_icon,
+                    "text": "Deployment Bot"
+                  }
+                }
+              ]
+            }')
+          curl -H "Content-Type: application/json" \
+               -d "$PAYLOAD" \
+               ${{ secrets.DISCORD_WEBHOOK }}
+
+      # Notify Failure
+      - name: Notify Discord Failure
+        if: failure()
+        run: |
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          JOB_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          FAILED_STEP=$(jq -r '.steps[] | select(.conclusion=="failure") | .name' $GITHUB_STEP_SUMMARY || echo "Unknown step")
+          PAYLOAD=$(jq -n \
+            --arg color "6485270" \
+            --arg url "$JOB_URL" \
+            --arg desc "Commit: $COMMIT_MESSAGE\nFailed at $FAILED_STEP" \
+            --arg title "**Frontend update échouée**" \
+            --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg footer_icon "https://www.snsm.org/themes/custom/customer/images/logo.png" \
+            '{
+              "embeds": [
+                {
+                  "title": $title,
+                  "url": $url,
+                  "description": $desc,
+                  "color": ($color|tonumber),
+                  "timestamp": $timestamp,
+                  "footer": {
+                    "icon_url": $footer_icon,
+                    "text": "Deployment Bot"
+                  }
+                }
+              ]
+            }')
+          curl -H "Content-Type: application/json" \
+               -d "$PAYLOAD" \
+               ${{ secrets.DISCORD_WEBHOOK }}
