@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foreclair/assets/colors/snsm_colors.dart';
+import 'package:foreclair/utils/logs/logger_utils.dart';
+
+import '../../../../../data/services/routes/route_service.dart';
 
 class DashboardUserIcon extends StatelessWidget {
   final String firstName;
@@ -9,25 +12,38 @@ class DashboardUserIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    RouteService routeService = RouteService();
     final initials = '${firstName.isNotEmpty ? firstName[0] : ''}${lastName.isNotEmpty ? lastName[0] : ''}';
 
     return Align(
       alignment: Alignment.topRight,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [SNSMColors.bleuOcean, SNSMColors.bleuMarin],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+      child: GestureDetector(
+        onTap: () {
+          routeService
+              .request(method: "GET", path: "/hello")
+              .then((response) {
+                logger.i('Response from /hello: ${response.data}');
+              })
+              .catchError((error) {
+                logger.e('Error calling /hello: $error');
+              });
+        },
+        child: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [SNSMColors.bleuOcean, SNSMColors.bleuMarin],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
           ),
-          shape: BoxShape.circle,
-        ),
-        child: Center(
-          child: Text(
-            initials.toUpperCase(),
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          child: Center(
+            child: Text(
+              initials.toUpperCase(),
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       ),

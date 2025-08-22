@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foreclair/assets/fonts/text_utils.dart';
 import 'package:foreclair/utils/units/size_utils.dart';
@@ -249,7 +250,7 @@ class _LogBookPageState extends State<LogBookPage> {
           Navigator.of(context).push(WavePageRoute(page: const LogBookActionPage()));
         },
         backgroundColor: Theme.of(context).colorScheme.secondary,
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(CupertinoIcons.add, color: Colors.white),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 

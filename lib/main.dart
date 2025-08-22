@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:foreclair/src/data/providers/navigation_provider.dart';
 import 'package:foreclair/src/ui/views/authentication/login_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import 'assets/colors/snsm_colors.dart';
 
@@ -11,7 +13,12 @@ void main() {
   initializeDateFormatting('fr_FR', null);
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => NavigationProvider())],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

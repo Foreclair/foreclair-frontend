@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foreclair/assets/colors/snsm_colors.dart';
 
@@ -20,11 +21,11 @@ class NavBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _item(icon: Icons.home, label: "Dashboard", index: 0),
-            _item(icon: Icons.person, label: "Effectifs", index: 1),
-            _item(icon: Icons.wb_cloudy, label: "Météo", index: 2),
-            _item(icon: Icons.data_usage, label: "Statistiques", index: 3),
-            _item(icon: Icons.settings, label: "Paramètres", index: 4),
+            _item(icon: CupertinoIcons.house_fill, label: "Dashboard", index: 0),
+            _item(icon: CupertinoIcons.person_3_fill, label: "Effectifs", index: 1),
+            _item(icon: CupertinoIcons.cloud_sun_fill, label: "Météo", index: 2),
+            _item(icon: CupertinoIcons.graph_square_fill, label: "Statistiques", index: 3),
+            _item(icon: CupertinoIcons.settings, label: "Paramètres", index: 4),
           ],
         ),
       ),

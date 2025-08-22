@@ -10,7 +10,7 @@ class TideCurve extends StatelessWidget {
   final Color curveColor;
   final Color gradientStartColor;
   final Color gradientEndColor;
-  final double height;
+  final double tideHeight;
   final bool isLabelsVisible;
 
   const TideCurve({
@@ -20,14 +20,14 @@ class TideCurve extends StatelessWidget {
     required this.curveColor,
     required this.gradientStartColor,
     required this.gradientEndColor,
-    this.height = 220,
+    this.tideHeight = 220,
     this.isLabelsVisible = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: height,
+      height: tideHeight + (isLabelsVisible ? 35 : 0), // Add space for labels if needed
       width: double.infinity,
       child: CustomPaint(
         painter: _TideCurvePainter(
@@ -36,6 +36,7 @@ class TideCurve extends StatelessWidget {
           curveColor: curveColor,
           gradientStartColor: gradientStartColor,
           gradientEndColor: gradientEndColor,
+          tideHeight: tideHeight,
           isLabelsVisible: isLabelsVisible,
         ),
       ),
@@ -49,6 +50,7 @@ class _TideCurvePainter extends CustomPainter {
   final Color curveColor;
   final Color gradientStartColor;
   final Color gradientEndColor;
+  final double tideHeight;
   final bool isLabelsVisible;
 
   _TideCurvePainter({
@@ -57,6 +59,7 @@ class _TideCurvePainter extends CustomPainter {
     required this.curveColor,
     required this.gradientStartColor,
     required this.gradientEndColor,
+    required this.tideHeight,
     required this.isLabelsVisible,
   });
 
@@ -74,14 +77,19 @@ class _TideCurvePainter extends CustomPainter {
 
     final dotPaint = Paint()..color = curveColor;
 
-    // Gradient: start high, end low, but extend bottom area for slow fade
+    // Calculate the actual curve area
+    final labelSpace = isLabelsVisible ? 35.0 : 0.0;
+    final curveAreaHeight = tideHeight;
+    final curveAreaTop = labelSpace;
+
+    // Gradient for the curve area only
     final gradientPaint = Paint()
       ..shader = LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [gradientStartColor, gradientEndColor],
-        stops: [0.0, 1.0], // Full height
-      ).createShader(Rect.fromLTWH(0, size.height * 0.4, size.width, size.height * 0.6))
+        stops: [0.0, 1.0],
+      ).createShader(Rect.fromLTWH(0, curveAreaTop, size.width, curveAreaHeight))
       ..style = PaintingStyle.fill;
 
     // Prepare tide points
@@ -115,12 +123,9 @@ class _TideCurvePainter extends CustomPainter {
     // Max coefficient for scaling
     final maxCoeff = extended.map((e) => e.coeff).reduce(math.max);
 
-    // Vertical mapping
-    final topPadding = size.height * 0.09;
-    final bottomPadding = size.height * 0.12;
-    final availableHeight = size.height - topPadding - bottomPadding;
-    final baseY = topPadding + availableHeight * 0.6;
-    final maxAmplitude = availableHeight * 0.45;
+    // Vertical mapping - now using the full tideHeight for the curve
+    final baseY = curveAreaTop + curveAreaHeight * 0.5; // Center of curve area
+    final maxAmplitude = curveAreaHeight * 0.45; // Use almost full height for amplitude
 
     // Precompute Y positions
     final extMinutes = extended.map((e) => e.min).toList();
@@ -143,14 +148,14 @@ class _TideCurvePainter extends CustomPainter {
       samples[px] = Offset(px.toDouble(), y);
     }
 
-    // Fill under curve
+    // Fill under curve - fill only within the curve area
     final Path fillPath = Path()
-      ..moveTo(0, size.height)
+      ..moveTo(0, curveAreaTop + curveAreaHeight)
       ..lineTo(samples[0].dx, samples[0].dy);
     for (int i = 1; i < samples.length; i++) {
       fillPath.lineTo(samples[i].dx, samples[i].dy);
     }
-    fillPath.lineTo(size.width, size.height);
+    fillPath.lineTo(size.width, curveAreaTop + curveAreaHeight);
     fillPath.close();
     canvas.drawPath(fillPath, gradientPaint);
 
@@ -175,32 +180,31 @@ class _TideCurvePainter extends CustomPainter {
         ..strokeWidth = 2,
     );
 
-    // === Labels always above the curve ===
-    final textPainter = TextPainter(textDirection: TextDirection.ltr);
-    for (final t in tides) {
-      final tideMinutes = (t.time.hour * 60 + t.time.minute).toDouble();
-      final x = (tideMinutes / totalMinutes) * size.width;
-      final y = _yForMinute(tideMinutes, extMinutes, extY);
-      final timeStr = "${t.time.hour.toString().padLeft(2, '0')}:${t.time.minute.toString().padLeft(2, '0')}";
-      final coeffStr = t.coefficient.toStringAsFixed(0);
+    // Labels above the curve (if space is available)
+    if (isLabelsVisible) {
+      final textPainter = TextPainter(textDirection: TextDirection.ltr);
+      for (final t in tides) {
+        final tideMinutes = (t.time.hour * 60 + t.time.minute).toDouble();
+        final x = (tideMinutes / totalMinutes) * size.width;
+        final y = _yForMinute(tideMinutes, extMinutes, extY);
+        final timeStr = "${t.time.hour.toString().padLeft(2, '0')}:${t.time.minute.toString().padLeft(2, '0')}";
+        final coeffStr = t.coefficient.toStringAsFixed(0);
 
-      // Time label
-      if (isLabelsVisible) {
+        // Time label - positioned above the curve area
         textPainter.text = TextSpan(
           text: timeStr,
           style: TextStyle(color: curveColor, fontSize: 11, fontWeight: FontWeight.w500),
         );
-
         textPainter.layout();
-        textPainter.paint(canvas, Offset(x - textPainter.width / 2, y - 30));
+        textPainter.paint(canvas, Offset(x - textPainter.width / 2, math.max(0, y - 30)));
 
-        // Coefficient label (just under the time)
+        // Coefficient label
         textPainter.text = TextSpan(
           text: coeffStr,
           style: TextStyle(color: curveColor, fontSize: 10),
         );
         textPainter.layout();
-        textPainter.paint(canvas, Offset(x - textPainter.width / 2, y - 17));
+        textPainter.paint(canvas, Offset(x - textPainter.width / 2, math.max(12, y - 17)));
       }
     }
   }

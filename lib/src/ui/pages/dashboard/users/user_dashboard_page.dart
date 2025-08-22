@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foreclair/src/data/dao/user_dao.dart';
+import 'package:foreclair/src/data/models/users/user_model.dart';
 import 'package:foreclair/src/ui/pages/dashboard/users/components/dashboard_layout.dart';
-import 'package:foreclair/src/ui/pages/dashboard/users/components/dashboard_user_icon.dart';
 import 'package:foreclair/src/ui/pages/dashboard/users/components/meteo_card.dart';
 import 'package:foreclair/src/ui/pages/logbook/main/logbook_page.dart';
 import 'package:foreclair/utils/units/size_utils.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../data/providers/navigation_provider.dart';
+import '../../../components/navbar/header_layout.dart';
 import 'components/logbook_card.dart';
 
 class UserDashboardPage extends StatefulWidget {
@@ -18,6 +22,7 @@ class UserDashboardPage extends StatefulWidget {
 class _UserDashboardPageState extends State<UserDashboardPage> {
   @override
   Widget build(BuildContext context) {
+    UserModel user = UserDao.instance.currentUser;
     final theme = Theme.of(context);
 
     return CupertinoPageScaffold(
@@ -25,19 +30,12 @@ class _UserDashboardPageState extends State<UserDashboardPage> {
       child: DashboardLayout(
         height: context.height(35),
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                key: const Key('user_dashboard_title'),
-                'Poste des Rochelets',
-                style: theme.textTheme.titleLarge?.copyWith(color: theme.colorScheme.onPrimaryContainer),
-              ),
-              DashboardUserIcon(key: const Key('user_dashboard_icon'), firstName: "Paul", lastName: "Salaun"),
-            ],
+          HeaderLayout(
+            key: const Key('user_dashboard_header'),
+            title: 'Poste: ${user.station.name}',
+            subtitle: 'Dashboard',
+            user: user,
           ),
-
-          SizedBox(height: context.height(7)),
 
           LogbookCard(
             key: const Key('user_dashboard_logbook_card'),
@@ -46,7 +44,12 @@ class _UserDashboardPageState extends State<UserDashboardPage> {
             },
           ),
 
-          MeteoCard(key: const Key('user_dashboard_meteo_card')),
+          MeteoCard(
+            key: const Key('user_dashboard_meteo_card'),
+            onTap: () {
+              context.read<NavigationProvider>().setIndex(2);
+            },
+          ),
         ],
       ),
     );
