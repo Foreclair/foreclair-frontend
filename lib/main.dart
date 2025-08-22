@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foreclair/src/data/providers/navigation_provider.dart';
-import 'package:foreclair/src/ui/views/authentication/login_view.dart';
+import 'package:foreclair/src/ui/pages/logbook/main/logbook_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       darkTheme: ThemeData(colorScheme: snsmDarkColorScheme, useMaterial3: true, fontFamily: 'Roboto'),
-      home: const LoginView(),
+      home: const LogBookPage(),
       debugShowCheckedModeBanner: false,
     );
   }

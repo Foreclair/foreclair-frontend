@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:foreclair/src/data/dao/user_dao.dart';
 import 'package:foreclair/src/data/models/users/user_model.dart';
 import 'package:foreclair/src/ui/pages/dashboard/users/components/dashboard_layout.dart';
-import 'package:foreclair/src/ui/pages/dashboard/users/components/meteo_card.dart';
+import 'package:foreclair/src/ui/pages/dashboard/users/components/dashboard_meteo_card.dart';
 import 'package:foreclair/src/ui/pages/logbook/main/logbook_page.dart';
 import 'package:foreclair/utils/units/size_utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../data/providers/navigation_provider.dart';
 import '../../../components/navbar/header_layout.dart';
-import 'components/logbook_card.dart';
+import 'components/dashboard_logbook_card.dart';
 
 class UserDashboardPage extends StatefulWidget {
   const UserDashboardPage({super.key});

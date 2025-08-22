@@ -61,7 +61,7 @@ jobs:
           PAYLOAD=$(jq -n \
             --arg color "1469988" \
             --arg url "$PAGES_URL" \
-            --arg desc "Commit: $COMMIT_MESSAGE\nMise à jour du GitHub Page" \
+            --arg desc "Commit: $COMMIT_MESSAGE - Mise à jour du GitHub Page" \
             --arg title "**Frontend update réussie**" \
             --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
             --arg footer_icon "https://www.snsm.org/themes/custom/customer/images/logo.png" \
@@ -94,7 +94,7 @@ jobs:
           PAYLOAD=$(jq -n \
             --arg color "6493718" \
             --arg url "$JOB_URL" \
-            --arg desc "Commit: $COMMIT_MESSAGE Failed" \
+            --arg desc "Commit: $COMMIT_MESSAGE - Failed" \
             --arg title "**Frontend update échouée**" \
             --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
             --arg footer_icon "https://www.snsm.org/themes/custom/customer/images/logo.png" \

@@ -22,7 +22,7 @@ class AuthService extends RouteService {
       );
 
       if (response.statusCode == 200) {
-        final token = response.data.toString();
+        final token = response.data['accessToken'].toString();
         await _routeService.storeToken(token);
         await request(method: "GET", path: "/users/$username")
             .then((userResponse) {

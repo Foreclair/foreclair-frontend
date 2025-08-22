@@ -75,9 +75,9 @@ const ColorScheme snsmDarkColorScheme = ColorScheme(
   onPrimaryContainer: SNSMColors.blanc,
 
   // Couleurs secondaires
-  secondary: SNSMColors.orange,
+  secondary: SNSMColors.rouge,
   onSecondary: SNSMColors.bleuMarin,
-  secondaryContainer: SNSMColors.rouge,
+  secondaryContainer: SNSMColors.orange,
   onSecondaryContainer: SNSMColors.blanc,
 
   // Couleurs tertiaires
