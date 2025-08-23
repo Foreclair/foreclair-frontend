@@ -15,7 +15,7 @@ class LoginGateway extends StatelessWidget {
   Future<_RouteTarget> _bootstrap() async {
     final isAuth = await AuthService.instance.isAuthenticated();
     if (!isAuth) return _RouteTarget.login;
-    
+
     final ok = await ApiService.instance.initializeUserInformation();
     return ok ? _RouteTarget.layout : _RouteTarget.error;
   }
@@ -23,6 +23,7 @@ class LoginGateway extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<_RouteTarget>(
+      key: const Key('login_gateway_future_builder'),
       future: _bootstrap(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {

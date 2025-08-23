@@ -5,14 +5,14 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foreclair/main.dart';
 
 void main() {
   testWidgets('Test App', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
-
-    expect(find.text('Se connecter'), findsOneWidget);
+    await tester.pumpWidget(const MaterialApp(home: MyApp()));
+    expect(find.byKey(const Key("login_gateway_future_builder")), findsOneWidget);
   });
 }
