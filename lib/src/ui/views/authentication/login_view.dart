@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:foreclair/src/data/services/http/api_service.dart';
 import 'package:foreclair/src/ui/components/extensions/snack_bar_extension.dart';
+import 'package:foreclair/src/ui/views/errors/fetching_error_view.dart';
 import 'package:foreclair/src/ui/views/layout/layout_view.dart';
 import 'package:foreclair/utils/units/size_utils.dart';
 
@@ -50,8 +51,13 @@ class _LoginViewState extends State<LoginView> {
       if (!mounted) return;
 
       if (result.isSuccess) {
-        context.showSuccessSnackBar('Connexion réussie !');
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LayoutView()));
+        final ok = await _apiService.initializeUserInformation();
+        if (!mounted) return;
+        if (ok) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const LayoutView()));
+        } else {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const FetchingErrorView()));
+        }
       } else {
         context.showErrorSnackBar(result.errorMessage!);
 

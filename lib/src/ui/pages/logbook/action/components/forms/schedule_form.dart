@@ -62,30 +62,28 @@ class _ScheduleFormState extends State<ScheduleForm> {
               ),
               const SizedBox(height: 24),
 
-              if (widget.event == EventType.ouverture) ...[
-                InkWell(
-                  onTap: _pickTime,
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade400),
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.grey.shade100,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          _selectedTime.format(context),
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        const Icon(Icons.access_time),
-                      ],
-                    ),
+              InkWell(
+                onTap: _pickTime,
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade400),
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.grey.shade100,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        _selectedTime.format(context),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      const Icon(Icons.access_time),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ],
           ),
 
@@ -94,7 +92,6 @@ class _ScheduleFormState extends State<ScheduleForm> {
           PrimaryActionButtonWidget(
             text: "Suivant",
             onPressed: () {
-              print("Selected time: ${_selectedTime.format(context)}");
               widget.onValidate(_selectedTime.toString());
             },
             color: Theme.of(context).colorScheme.secondary,

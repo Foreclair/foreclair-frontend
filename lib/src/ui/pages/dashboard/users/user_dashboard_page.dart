@@ -22,7 +22,7 @@ class UserDashboardPage extends StatefulWidget {
 class _UserDashboardPageState extends State<UserDashboardPage> {
   @override
   Widget build(BuildContext context) {
-    UserModel user = UserDao.instance.currentUser;
+    UserModel? user = UserDao.instance.currentUser;
     final theme = Theme.of(context);
 
     return CupertinoPageScaffold(
@@ -32,7 +32,7 @@ class _UserDashboardPageState extends State<UserDashboardPage> {
         children: [
           HeaderLayout(
             key: const Key('user_dashboard_header'),
-            title: 'Poste: ${user.station.name}',
+            title: 'Poste: ${user?.station.name}',
             subtitle: 'Dashboard',
             user: user,
           ),

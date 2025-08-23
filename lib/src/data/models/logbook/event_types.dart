@@ -69,5 +69,7 @@ enum EventType {
   final IconData icon;
   final Color color;
 
+  // final List<EventTypeAtribute> attributes = [];
+
   const EventType({required this.title, required this.subtitle, required this.icon, required this.color});
 }

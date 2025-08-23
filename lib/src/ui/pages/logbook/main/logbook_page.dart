@@ -51,7 +51,7 @@ class _LogBookPageState extends State<LogBookPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
-                          onTap: () => Navigator.of(context).pop,
+                          onTap: () => {Navigator.of(context).pop()},
                           child: CircleAvatar(
                             backgroundColor: Colors.transparent,
                             child: Icon(CupertinoIcons.back, color: Theme.of(context).colorScheme.onPrimaryContainer),

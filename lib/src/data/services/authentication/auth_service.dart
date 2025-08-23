@@ -28,7 +28,7 @@ class AuthService {
     final accessToken = await _storage.read(key: AuthKeys.ACCESS_TOKEN);
 
     // Check if the token is still valid
-    if(accessToken == null || JwtDecoder.isExpired(accessToken)) {
+    if (accessToken == null || JwtDecoder.isExpired(accessToken)) {
       return refreshAccessToken();
     }
 
@@ -59,7 +59,7 @@ class AuthService {
 
   Future<String?> getUsername() async {
     final accessToken = await getAccessToken();
-    if(accessToken == null) {
+    if (accessToken == null) {
       return null;
     }
 
@@ -92,14 +92,10 @@ class AuthService {
   /// Tries to login with a username and password
   Future<AuthResult> login(String username, String password) async {
     try {
-      final String basicAuth =
-          'Basic ${base64Encode(utf8.encode('$username:$password'))}';
+      final String basicAuth = 'Basic ${base64Encode(utf8.encode('$username:$password'))}';
       final response = await _dio.post(
         '/auth',
-        options: Options(
-          headers: {'Authorization': basicAuth},
-          validateStatus: (status) => status! < 500,
-        ),
+        options: Options(headers: {'Authorization': basicAuth}, validateStatus: (status) => status! < 500),
       );
 
       switch (response.statusCode) {
@@ -108,8 +104,8 @@ class AuthService {
             // Successful login
             final String accessToken = response.data['accessToken'];
             final String refreshToken = response.data['refreshToken'];
-            storeTokens(accessToken, refreshToken);
             logger.i('Successful login for $username');
+            await storeTokens(accessToken, refreshToken);
             return AuthResult.success(accessToken);
           }
         case 401:
@@ -131,25 +127,11 @@ class AuthService {
           }
       }
     } on DioException catch (e) {
-      logger.e(
-        'Network error during login',
-        error: e,
-        stackTrace: StackTrace.current,
-      );
-      return AuthResult.failure(
-        _getNetworkErrorMessage(e),
-        AuthErrorType.networkError,
-      );
+      logger.e('Network error during login', error: e, stackTrace: StackTrace.current);
+      return AuthResult.failure(_getNetworkErrorMessage(e), AuthErrorType.networkError);
     } catch (e) {
-      logger.e(
-        'Unexpected error during login',
-        error: e,
-        stackTrace: StackTrace.current,
-      );
-      return AuthResult.failure(
-        "Une erreur inattendue s'est produite.",
-        AuthErrorType.unknown,
-      );
+      logger.e('Unexpected error during login', error: e, stackTrace: StackTrace.current);
+      return AuthResult.failure("Une erreur inattendue s'est produite.", AuthErrorType.unknown);
     }
   }
 

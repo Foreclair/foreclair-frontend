@@ -5,7 +5,7 @@ import 'package:foreclair/utils/units/size_utils.dart';
 import '../../pages/dashboard/users/components/dashboard_user_icon.dart';
 
 class HeaderLayout extends StatelessWidget {
-  final UserModel user;
+  final UserModel? user;
   final String title;
   final String subtitle;
 
@@ -38,7 +38,7 @@ class HeaderLayout extends StatelessWidget {
               ],
             ),
 
-            DashboardUserIcon(key: const Key('user_dashboard_icon'), firstName: user.firstName, lastName: user.lastName),
+            DashboardUserIcon(key: const Key('user_dashboard_icon'), firstName: user!.firstName, lastName: user!.lastName),
           ],
         ),
 
