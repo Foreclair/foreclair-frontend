@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:foreclair/src/data/services/http/api_service.dart';
 import 'package:foreclair/src/ui/components/extensions/snack_bar_extension.dart';
 import 'package:foreclair/src/ui/views/layout/layout_view.dart';
 import 'package:foreclair/utils/units/size_utils.dart';
@@ -25,7 +26,8 @@ class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final AuthService _authService = AuthService();
+  final AuthService _authService = AuthService.instance;
+  final ApiService _apiService = ApiService.instance;
 
   bool _isLoading = false;
 
@@ -42,7 +44,8 @@ class _LoginViewState extends State<LoginView> {
     setState(() => _isLoading = true);
 
     try {
-      final result = await _authService.login(_emailController.text.trim(), _passwordController.text);
+      final username = _emailController.text.trim();
+      final result = await _authService.login(username, _passwordController.text);
 
       if (!mounted) return;
 

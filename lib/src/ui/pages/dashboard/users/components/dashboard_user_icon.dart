@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foreclair/assets/colors/snsm_colors.dart';
+import 'package:foreclair/src/data/services/http/api_service.dart';
 import 'package:foreclair/utils/logs/logger_utils.dart';
-
-import '../../../../../data/services/routes/route_service.dart';
 
 class DashboardUserIcon extends StatelessWidget {
   final String firstName;
@@ -12,15 +11,15 @@ class DashboardUserIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RouteService routeService = RouteService();
+    ApiService apiService = ApiService.instance;
     final initials = '${firstName.isNotEmpty ? firstName[0] : ''}${lastName.isNotEmpty ? lastName[0] : ''}';
 
     return Align(
       alignment: Alignment.topRight,
       child: GestureDetector(
         onTap: () {
-          routeService
-              .request(method: "GET", path: "/hello")
+          apiService
+              .get(path: "/hello")
               .then((response) {
                 logger.i('Response from /hello: ${response.data}');
               })

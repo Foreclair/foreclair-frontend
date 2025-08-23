@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foreclair/src/data/services/http/api_service.dart';
 import 'package:foreclair/src/ui/components/navbar/navbar.dart';
 import 'package:foreclair/src/ui/pages/dashboard/users/user_dashboard_page.dart';
 import 'package:foreclair/src/ui/pages/meteo/meteo_page.dart';

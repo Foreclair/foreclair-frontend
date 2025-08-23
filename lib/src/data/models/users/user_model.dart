@@ -20,7 +20,7 @@ class UserModel {
     required this.station,
   });
 
-  static UserModel fromJson(data) {
+  factory UserModel.fromJson(data) {
     return UserModel(
       id: data['id'] ?? '0',
       firstName: data['firstname'] ?? '',
@@ -28,7 +28,7 @@ class UserModel {
       username: data['username'] ?? '',
       role: data['role'] ?? '',
       sector: Sector.fromJson(data['sector']),
-      station: Station.fromJson(data['station']),
+      station: Station.fromJson(data['station']), // TODO: that could be null, add some null check
     );
   }
 }

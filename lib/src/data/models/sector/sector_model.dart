@@ -8,7 +8,7 @@ class Sector {
 
   Sector({required this.id, required this.location, required this.name, required this.stations});
 
-  static fromJson(data) {
+  factory Sector.fromJson(data) {
     return Sector(
       id: data['id'] ?? '0',
       location: data['location']?.toDouble() ?? 0.0,

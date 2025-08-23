@@ -5,7 +5,7 @@ class Station {
 
   Station({required this.id, required this.location, required this.name});
 
-  static fromJson(station) {
+  factory Station.fromJson(station) {
     return Station(id: station['id'] ?? '0', location: station['location']?.toDouble() ?? 0.0, name: station['name'] ?? '');
   }
 }
