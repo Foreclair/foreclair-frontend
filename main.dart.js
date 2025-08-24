@@ -103956,7 +103956,7 @@ return new A.anp(new A.a5n(A.t(q,A.ad("al<c5>")),A.t(q,t.V4)))})
 s($,"ba3","aRf",()=>new A.ahY(A.t(t.N,A.ad("al<c5?>?(c5?)"))))
 s($,"ba1","aRd",()=>{var q=null
 return A.jc(q,q,q,q,q,q,q,q,A.b3P().$0().d,q,q,32,q,q,B.aU,q,q,!0,q,q,q,q,q,q,q,q)})
-s($,"b4x","aFW",()=>{var q=A.aRT("http://localhost:8080/",B.RZ,A.aG(["Content-Type","application/json"],t.N,t.z),B.qM),p=A.aN3(),o=new A.OF(A.a([B.MI],A.ad("u<id?>")))
+s($,"b4x","aFW",()=>{var q=A.aRT("https://foreclair.tatnux.fr/",B.RZ,A.aG(["Content-Type","application/json"],t.N,t.z),B.qM),p=A.aN3(),o=new A.OF(A.a([B.MI],A.ad("u<id?>")))
 o.G(o,B.a02)
 o=new A.a7f(p,o,A.aN3(),new A.aaH(51200),!1)
 o.Wr$=q
