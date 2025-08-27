@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:foreclair/src/data/models/logbook/attribute.dart';
+import 'package:foreclair/src/data/models/logbook/event_attribute.dart';
 
 class TimeInputFormField extends FormField<TimeOfDay> {
   TimeInputFormField({
     super.key,
-    required Attribute attribute,
+    required EventAttribute attribute,
     TimeOfDay? initialValue,
     super.validator,
     required FormFieldSetter<TimeOfDay?> super.onSaved,

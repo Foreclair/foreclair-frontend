@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:foreclair/src/data/dao/user_dao.dart';
+import 'package:foreclair/src/data/models/logbook/event_type_dto.dart';
 import 'package:foreclair/src/data/models/logbook/event_types.dart';
+import 'package:foreclair/src/data/services/app/event_type_service.dart';
 import 'package:foreclair/src/ui/pages/logbook/action/components/general_logbook_form.dart';
 import 'package:foreclair/src/ui/pages/logbook/action/components/logbook_action_choice_card.dart';
 import 'package:foreclair/src/ui/pages/logbook/action/components/logbook_action_header.dart';
@@ -17,8 +20,8 @@ class _LogBookActionPageState extends State<LogBookActionPage> {
   final StepProgressController _stepProgressController = StepProgressController(totalSteps: 3);
 
   bool _visible = false;
-  int _currentStep = 0;
-  EventType _currentEvent = EventType.intervention;
+  late EventType _currentEvent;
+  late EventTypeDto _currentEventDto;
 
   @override
   void initState() {
@@ -46,9 +49,8 @@ class _LogBookActionPageState extends State<LogBookActionPage> {
 
             StepProgress(
               onStepNodeTapped: (index) {
-                if (index <= _currentStep) {
+                if (index <= _stepProgressController.currentStep) {
                   setState(() {
-                    _currentStep = index;
                     _stepProgressController.setCurrentStep(index);
                   });
                 }
@@ -60,16 +62,11 @@ class _LogBookActionPageState extends State<LogBookActionPage> {
               totalSteps: 3,
               padding: const EdgeInsets.symmetric(horizontal: 24),
               controller: _stepProgressController,
-              onStepChanged: (currentIndex) {
-                setState(() {
-                  _currentStep = currentIndex;
-                });
-              },
             ),
 
             const SizedBox(height: 24),
 
-            if (_currentStep == 0) ...[
+            if (_stepProgressController.currentStep == 0) ...[
               Expanded(
                 child: GridView.count(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
@@ -83,7 +80,6 @@ class _LogBookActionPageState extends State<LogBookActionPage> {
                           event: event,
                           callback: () {
                             setState(() {
-                              _currentStep++;
                               _stepProgressController.nextStep();
                               _currentEvent = event;
                             });
@@ -93,24 +89,32 @@ class _LogBookActionPageState extends State<LogBookActionPage> {
                       .toList(),
                 ),
               ),
-            ] else if (_currentStep == 1) ...[
+            ] else if (_stepProgressController.currentStep == 1) ...[
               GeneralLogbookForm(
                 event: _currentEvent,
                 onValidate: (args) {
-                  for (var element in _currentEvent.attributes) {
-                    logger.d(args[element.key]);
-                    // Envoyer API POST event
-                  }
-
                   setState(() {
                     _stepProgressController.nextStep();
-                    _currentStep++;
+
+                    final attributes = <String, String>{};
+                    for (var element in _currentEvent.attributes) {
+                      final value = args[element.key];
+                      final json = element.type.toJson(value);
+                      attributes[element.key] = json;
+                    }
+
+                    final currentUser = UserDao.instance.currentUser;
+                    if(currentUser != null) {
+                      _currentEventDto = EventTypeDto(_currentEvent.key, currentUser.station.id, currentUser.id, attributes);
+                    }
                   });
                 },
               ),
-            ] else if (_currentStep == 2) ...[
+            ] else if (_stepProgressController.currentStep == 2) ...[
               Text('Step 3: Review and submit'),
-              ElevatedButton(onPressed: () {}, child: Text('Submit')),
+              ElevatedButton(onPressed: () {
+                EventTypeService.instance.sendEventType(_currentEventDto);
+              }, child: Text('Submit')),
             ],
           ],
         ),

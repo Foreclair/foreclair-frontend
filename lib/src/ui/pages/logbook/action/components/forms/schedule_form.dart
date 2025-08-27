@@ -54,7 +54,7 @@ class _ScheduleFormState extends State<ScheduleForm> {
           Column(
             children: [
               Text(
-                widget.event == EventType.ouverture ? "Ouverture du poste" : "Fermeture du poste",
+                widget.event.title,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimary),
