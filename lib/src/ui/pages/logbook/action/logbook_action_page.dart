@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:foreclair/src/data/models/logbook/event_types.dart';
+import 'package:foreclair/src/ui/pages/logbook/action/components/general_logbook_form.dart';
 import 'package:foreclair/src/ui/pages/logbook/action/components/logbook_action_choice_card.dart';
 import 'package:foreclair/src/ui/pages/logbook/action/components/logbook_action_header.dart';
+import 'package:foreclair/utils/logs/logger_utils.dart';
 import 'package:step_progress/step_progress.dart';
-
-import 'components/forms/heal_form.dart';
-import 'components/forms/intervention_form.dart';
-import 'components/forms/prevention_form.dart';
-import 'components/forms/rotation_form.dart';
-import 'components/forms/schedule_form.dart';
-import 'components/forms/supervision_form.dart';
 
 class LogBookActionPage extends StatefulWidget {
   const LogBookActionPage({super.key});
@@ -33,41 +28,6 @@ class _LogBookActionPageState extends State<LogBookActionPage> {
         setState(() => _visible = true);
       }
     });
-  }
-
-  Widget buildLogBookRoute(EventType event) {
-    switch (event) {
-      case EventType.ouverture || EventType.fermeture:
-        return ScheduleForm(
-          onValidate: (time) {
-            setState(() {
-              _currentStep++;
-              _stepProgressController.nextStep();
-            });
-          },
-          event: event,
-        );
-      case EventType.dsurveillance || EventType.fsurveillance:
-        return SupervisionForm();
-      case EventType.intervention:
-        return InterventionForm();
-      case EventType.heal:
-        return HealForm();
-      case EventType.prevention:
-        return PreventionForm();
-      case EventType.rotation:
-        return RotationForm();
-      default:
-        return ScheduleForm(
-          onValidate: (time) {
-            setState(() {
-              _currentStep++;
-              _stepProgressController.nextStep();
-            });
-          },
-          event: event,
-        );
-    }
   }
 
   @override
@@ -134,7 +94,20 @@ class _LogBookActionPageState extends State<LogBookActionPage> {
                 ),
               ),
             ] else if (_currentStep == 1) ...[
-              buildLogBookRoute(_currentEvent),
+              GeneralLogbookForm(
+                event: _currentEvent,
+                onValidate: (args) {
+                  for (var element in _currentEvent.attributes) {
+                    logger.d(args[element.key]);
+                    // Envoyer API POST event
+                  }
+
+                  setState(() {
+                    _stepProgressController.nextStep();
+                    _currentStep++;
+                  });
+                },
+              ),
             ] else if (_currentStep == 2) ...[
               Text('Step 3: Review and submit'),
               ElevatedButton(onPressed: () {}, child: Text('Submit')),
