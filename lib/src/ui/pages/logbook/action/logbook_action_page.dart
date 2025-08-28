@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foreclair/src/data/dao/user_dao.dart';
 import 'package:foreclair/src/data/models/logbook/event_type_dto.dart';
 import 'package:foreclair/src/data/models/logbook/event_types.dart';
-import 'package:foreclair/src/data/services/app/event_type_service.dart';
+import 'package:foreclair/src/data/services/app/logbook/event_type_service.dart';
 import 'package:foreclair/src/ui/pages/logbook/action/components/general_logbook_form.dart';
 import 'package:foreclair/src/ui/pages/logbook/action/components/logbook_action_choice_card.dart';
 import 'package:foreclair/src/ui/pages/logbook/action/components/logbook_action_header.dart';

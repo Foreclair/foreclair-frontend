@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foreclair/assets/fonts/text_utils.dart';
+import 'package:foreclair/src/data/dao/user_dao.dart';
+import 'package:foreclair/src/data/models/logbook/event_type_dto.dart';
+import 'package:foreclair/src/data/services/app/logbook/event_type_service.dart';
 import 'package:foreclair/src/ui/components/layouts/topography_background.dart';
-import 'package:foreclair/src/ui/pages/logbook/main/components/logbook_timeline.dart';
+import 'package:foreclair/src/ui/pages/logbook/main/logbook_timeline.dart';
 import 'package:foreclair/utils/units/size_utils.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../utils/logs/logger_utils.dart';
 import '../../../components/animations/route/wave_page_route.dart';
 import '../action/logbook_action_page.dart';
 
@@ -18,12 +22,25 @@ class LogBookPage extends StatefulWidget {
 
 class _LogBookPageState extends State<LogBookPage> {
   late final String formattedDate;
+  late final Future<List<EventTypeDto>> _futureEvents;
 
   @override
   void initState() {
     super.initState();
     final now = DateTime.now();
     formattedDate = DateFormat("dd/MM/yyyy").format(now);
+
+    _futureEvents = _fetchEvents();
+  }
+
+  Future<List<EventTypeDto>> _fetchEvents() async {
+    try {
+      final response = await EventTypeService.instance.getDailyEvents(UserDao.instance.currentUser!.station);
+      return (response.data as List).map((e) => EventTypeDto.fromJson(e)).toList();
+    } catch (error) {
+      logger.e("Failed to fetch events: $error");
+      return [];
+    }
   }
 
   @override
@@ -79,7 +96,24 @@ class _LogBookPageState extends State<LogBookPage> {
                 ),
               ),
 
-              Expanded(child: LogbookTimeline()),
+              // 🔑 FutureBuilder for events
+              Expanded(
+                child: FutureBuilder<List<EventTypeDto>>(
+                  future: _futureEvents,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text("Failed to load events", style: Theme.of(context).textTheme.bodyLarge));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text("No events yet"));
+                    }
+
+                    final events = snapshot.data!;
+                    return LogbookTimeline(events: events);
+                  },
+                ),
+              ),
             ],
           ),
         ],
