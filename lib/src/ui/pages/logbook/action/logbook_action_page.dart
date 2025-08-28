@@ -6,7 +6,6 @@ import 'package:foreclair/src/data/services/app/event_type_service.dart';
 import 'package:foreclair/src/ui/pages/logbook/action/components/general_logbook_form.dart';
 import 'package:foreclair/src/ui/pages/logbook/action/components/logbook_action_choice_card.dart';
 import 'package:foreclair/src/ui/pages/logbook/action/components/logbook_action_header.dart';
-import 'package:foreclair/utils/logs/logger_utils.dart';
 import 'package:step_progress/step_progress.dart';
 
 class LogBookActionPage extends StatefulWidget {
@@ -105,7 +104,7 @@ class _LogBookActionPageState extends State<LogBookActionPage> {
 
                     final currentUser = UserDao.instance.currentUser;
                     if(currentUser != null) {
-                      _currentEventDto = EventTypeDto(_currentEvent.key, currentUser.station.id, currentUser.id, attributes);
+                      _currentEventDto = EventTypeDto(_currentEvent.key, currentUser.station.id, currentUser.id, DateTime.now(), attributes);
                     }
                   });
                 },
