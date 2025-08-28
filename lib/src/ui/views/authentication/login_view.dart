@@ -138,37 +138,44 @@ class _LoginViewState extends State<LoginView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Flexible(
-                                child: LoginFormField(
-                                  key: const Key('emailField'),
-                                  controller: _emailController,
-                                  hint: "Identifiant",
-                                  color: Theme.of(context).colorScheme.primary,
-                                  icon: CupertinoIcons.profile_circled,
-                                  validator: (value) {
-                                    if (value == null || value.trim().isEmpty) {
-                                      return 'Veuillez saisir votre identifiant';
-                                    }
-                                    return null;
-                                  },
-                                  autofillHints: const [AutofillHints.username],
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 5),
+                                  child: LoginFormField(
+                                    key: const Key('emailField'),
+                                    controller: _emailController,
+                                    hint: "Identifiant",
+                                    color: Theme.of(context).colorScheme.primary,
+                                    icon: CupertinoIcons.profile_circled,
+                                    validator: (value) {
+                                      if (value == null || value.trim().isEmpty) {
+                                        return 'Veuillez saisir votre identifiant';
+                                      }
+                                      return null;
+                                    },
+                                    autofillHints: const [AutofillHints.username],
+                                  ),
                                 ),
                               ),
                               SizedBox(height: context.height(1)),
                               Flexible(
-                                child: LoginFormField(
-                                  key: const Key('passwordField'),
-                                  controller: _passwordController,
-                                  color: Theme.of(context).colorScheme.primary,
-                                  hint: "Mot de passe",
-                                  password: true,
-                                  icon: CupertinoIcons.lock,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Veuillez saisir votre mot de passe';
-                                    }
-                                    return null;
-                                  },
-                                  autofillHints: const [AutofillHints.password],
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 5),
+                                  child: LoginFormField(
+                                    key: const Key('passwordField'),
+                                    controller: _passwordController,
+                                    color: Theme.of(context).colorScheme.primary,
+                                    hint: "Mot de passe",
+                                    password: true,
+                                    icon: CupertinoIcons.lock,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Veuillez saisir votre mot de passe';
+                                      }
+                                      return null;
+                                    },
+                                    autofillHints: const [AutofillHints.password],
+                                    onFieldSubmitted: (_) => _handleLogin(),
+                                  ),
                                 ),
                               ),
                             ],
