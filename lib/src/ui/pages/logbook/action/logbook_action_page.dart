@@ -103,17 +103,27 @@ class _LogBookActionPageState extends State<LogBookActionPage> {
                     }
 
                     final currentUser = UserDao.instance.currentUser;
-                    if(currentUser != null) {
-                      _currentEventDto = EventTypeDto(_currentEvent.key, currentUser.station.id, currentUser.id, DateTime.now(), attributes);
+                    if (currentUser != null) {
+                      _currentEventDto = EventTypeDto(
+                        _currentEvent.key,
+                        currentUser.station.id,
+                        currentUser.id,
+                        DateTime.now(),
+                        attributes,
+                      );
                     }
                   });
                 },
               ),
             ] else if (_stepProgressController.currentStep == 2) ...[
               Text('Step 3: Review and submit'),
-              ElevatedButton(onPressed: () {
-                EventTypeService.instance.sendEventType(_currentEventDto);
-              }, child: Text('Submit')),
+              ElevatedButton(
+                onPressed: () {
+                  EventTypeService.instance.sendEventType(_currentEventDto);
+                  Navigator.of(context).pop(_currentEventDto);
+                },
+                child: Text('Submit'),
+              ),
             ],
           ],
         ),

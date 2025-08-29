@@ -22,7 +22,7 @@ class LogBookPage extends StatefulWidget {
 
 class _LogBookPageState extends State<LogBookPage> {
   late final String formattedDate;
-  late final Future<List<EventTypeDto>> _futureEvents;
+  late Future<List<EventTypeDto>> _futureEvents;
 
   @override
   void initState() {
@@ -120,8 +120,14 @@ class _LogBookPageState extends State<LogBookPage> {
       ),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(WavePageRoute(page: const LogBookActionPage()));
+        onPressed: () async {
+          final newEvent = await Navigator.of(context).push(WavePageRoute(page: const LogBookActionPage()));
+
+          if (newEvent is EventTypeDto) {
+            setState(() {
+              _futureEvents = _futureEvents.then((events) => [...events, newEvent]);
+            });
+          }
         },
         backgroundColor: Theme.of(context).colorScheme.secondary,
         child: Icon(CupertinoIcons.add, color: Theme.of(context).colorScheme.onSecondary),

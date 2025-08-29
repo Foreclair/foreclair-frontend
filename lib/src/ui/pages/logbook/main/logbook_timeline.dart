@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foreclair/src/data/models/logbook/event_type_dto.dart';
 import 'package:foreclair/src/data/models/logbook/event_types.dart';
 import 'package:foreclair/src/data/services/app/logbook/event_type_service.dart';
+import 'package:foreclair/utils/logs/logger_utils.dart';
 import 'package:intl/intl.dart';
 
 class LogbookTimeline extends StatefulWidget {
@@ -15,7 +16,9 @@ class LogbookTimeline extends StatefulWidget {
 
 class _LogbookTimelineState extends State<LogbookTimeline> {
   final ScrollController _scrollController = ScrollController();
-  final List<EventType> _eventTypes = [];
+  int? _selectedIndex;
+
+  List<EventType> get _eventTypes => widget.events.map((e) => EventTypeService.instance.getEventTypeByKey(e.key)).toList();
 
   @override
   void didUpdateWidget(covariant LogbookTimeline oldWidget) {
@@ -23,80 +26,117 @@ class _LogbookTimelineState extends State<LogbookTimeline> {
     if (widget.events.length != oldWidget.events.length) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_scrollController.hasClients) {
-          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeOut,
+          );
         }
       });
     }
   }
 
   @override
-  void initState() {
-    for (var value in widget.events) {
-      _eventTypes.add(EventTypeService.instance.getEventTypeByKey(value.key));
-    }
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final sortedEvents = [...widget.events]..sort((a, b) => a.date.compareTo(b.date));
-
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHigh,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: ListView.builder(
-          controller: _scrollController,
-          itemCount: sortedEvents.length,
-          itemBuilder: (context, index) {
-            return _buildTimelineRow(context, sortedEvents[index]);
-          },
-        ),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      child: ListView.builder(
+        controller: _scrollController,
+        itemCount: widget.events.length,
+        itemBuilder: (context, index) {
+          final event = widget.events[index];
+          final eventType = _eventTypes[index];
+          final isSelected = _selectedIndex == index;
+
+          return _TimelineRow(
+            event: event,
+            eventType: eventType,
+            isSelected: isSelected,
+            onTap: () {
+              logger.d("Tapped on event: ${eventType.title}");
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+          );
+        },
       ),
     );
   }
+}
 
-  Widget _buildTimelineRow(BuildContext context, EventTypeDto event) {
+class _TimelineRow extends StatelessWidget {
+  final EventTypeDto event;
+  final EventType eventType;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _TimelineRow({required this.event, required this.eventType, required this.isSelected, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
     final timeFormatted = DateFormat.Hm().format(event.date);
-    final eventType = _eventTypes.firstWhere(
-      (et) => et.key == event.key,
-      orElse: () => EventType(
-        key: 'unknown',
-        title: 'Inconnu',
-        subtitle: 'Type d\'événement inconnu',
-        icon: Icons.help_outline,
-        color: Colors.grey,
-        attributes: [],
-      ),
-    );
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          // Time
           SizedBox(
             width: 60,
-            child: Text(timeFormatted, style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.right),
+            child: Text(
+              timeFormatted,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.right,
+            ),
           ),
+
           const SizedBox(width: 12),
 
+          // Event Card
           Expanded(
             child: Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                child: Row(
-                  children: [
-                    Icon(eventType.icon, color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(width: 12),
-                    Expanded(child: Text(eventType.title, style: Theme.of(context).textTheme.bodyLarge)),
-                  ],
+              color: isSelected ? eventType.color.withAlpha(30) : Theme.of(context).colorScheme.surface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: isSelected
+                    ? BorderSide(color: eventType.color, width: 1.5)
+                    : BorderSide(color: Theme.of(context).colorScheme.outline, width: .5),
+              ),
+              elevation: 0,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: onTap,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundColor: eventType.color.withAlpha(40),
+                        child: Icon(eventType.icon, color: eventType.color),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          eventType.title,
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: isSelected ? eventType.color : Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
