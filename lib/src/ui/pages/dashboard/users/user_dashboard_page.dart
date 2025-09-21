@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foreclair/src/data/dao/user_dao.dart';
 import 'package:foreclair/src/data/models/users/user_model.dart';
 import 'package:foreclair/src/ui/pages/dashboard/users/components/dashboard_layout.dart';
-import 'package:foreclair/src/ui/pages/dashboard/users/components/dashboard_meteo_card.dart';
+import 'package:foreclair/src/ui/pages/dashboard/users/components/dashboard_weather_card.dart';
 import 'package:foreclair/src/ui/pages/logbook/main/logbook_page.dart';
 import 'package:foreclair/utils/units/size_utils.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +44,7 @@ class _UserDashboardPageState extends State<UserDashboardPage> {
             },
           ),
 
-          MeteoCard(
+          WeatherCard(
             key: const Key('user_dashboard_meteo_card'),
             onTap: () {
               context.read<NavigationProvider>().setIndex(2);

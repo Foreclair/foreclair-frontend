@@ -1,11 +1,13 @@
 class Station {
   final String id;
-  final double location;
   final String name;
+  final double longitude;
+  final double latitude;
 
-  Station({required this.id, required this.location, required this.name});
+
+  Station(this.id, this.name, this.longitude, this.latitude);
 
   factory Station.fromJson(station) {
-    return Station(id: station['id'] ?? '0', location: station['location']?.toDouble() ?? 0.0, name: station['name'] ?? '');
+    return Station(station['id'] ?? '0', station['name'] ?? '', station['longitude']?.toDouble() ?? 0.0, station['latitude']?.toDouble() ?? 0.0);
   }
 }

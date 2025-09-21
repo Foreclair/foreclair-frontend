@@ -6,14 +6,14 @@ import 'package:foreclair/utils/units/size_utils.dart';
 import '../../components/navbar/header_layout.dart';
 import '../dashboard/users/components/dashboard_layout.dart';
 
-class MeteoPage extends StatefulWidget {
-  const MeteoPage({super.key});
+class WeatherPage extends StatefulWidget {
+  const WeatherPage({super.key});
 
   @override
-  State<MeteoPage> createState() => _MeteoPageState();
+  State<WeatherPage> createState() => _WeatherPageState();
 }
 
-class _MeteoPageState extends State<MeteoPage> {
+class _WeatherPageState extends State<WeatherPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

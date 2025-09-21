@@ -3,7 +3,7 @@ import 'package:foreclair/src/data/dao/user_dao.dart';
 import 'package:foreclair/src/data/services/http/api_service.dart';
 import 'package:foreclair/src/ui/components/navbar/navbar.dart';
 import 'package:foreclair/src/ui/pages/dashboard/users/user_dashboard_page.dart';
-import 'package:foreclair/src/ui/pages/meteo/meteo_page.dart';
+import 'package:foreclair/src/ui/pages/meteo/weather_page.dart';
 import 'package:foreclair/src/ui/views/errors/fetching_error_view.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +22,7 @@ class _LayoutViewState extends State<LayoutView> {
   final pages = const [
     Center(child: UserDashboardPage()),
     Center(child: Text("Page 2")),
-    Center(child: MeteoPage()),
+    Center(child: WeatherPage()),
     Center(child: Text("Page 4")),
     Center(child: Text("Page 5")),
   ];

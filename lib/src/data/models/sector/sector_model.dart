@@ -19,7 +19,7 @@ class Sector {
                 if (s is Map) {
                   return Station.fromJson(s);
                 } else {
-                  return Station(id: s.toString(), location: 0.0, name: '');
+                  return Station(s.toString(), '', 0.0, 0.0);
                 }
               })
               .toList()

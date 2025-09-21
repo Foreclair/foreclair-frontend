@@ -20,7 +20,7 @@ void main() {
       username: "Test",
       role: "ADMIN",
       sector: Sector(id: "1", location: 12, name: "testSector", stations: []),
-      station: Station(id: "2", location: 12.1, name: "testStation"),
+      station: Station("2", "testStation", 12.1, 2.0),
     );
 
     await tester.pumpWidget(

@@ -1,8 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-
-import '../../../data/models/meteo/tide/tide_model.dart';
+import 'package:foreclair/src/data/models/weather/tide/tide_model.dart';
 
 class TideCurve extends StatelessWidget {
   final List<TideModel> tides;
